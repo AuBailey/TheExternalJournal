@@ -2,12 +2,31 @@
 
 const appConfig = require('../../config/appConfig'),
     bcrypt = require('bcryptjs'),
+    jwt = require('jsonwebtoken'),
     mailConfig = require('../../config/mailConfig'),
     mailer = require('../mailer'),
     QRCode = require('qrcode'),
     speakeasy = require('speakeasy'),
     userModel = require('../user/userModel'),
     uuidv4 = require('uuid/v4');
+
+/** 
+ * Middleware to check if request's authorization header is valid, if valid it sets req.user to decoded data. 
+ * @param {*} req  
+ * @param {*} res  
+ * @param {*} next  
+ */ 
+exports.verifyAndDecodeJwt = function (req, res, next) { 
+    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') { 
+        jwt.verify(req.headers.authorization.split(' ')[1], appConfig.secret, function (error, decode) { 
+            req.user = (error) ? undefined : decode; 
+            next(); 
+        }); 
+    } else { 
+        req.user = undefined; 
+        next(); 
+    } 
+} 
 
 /**
  * Middleware to only run next() if user is logged in.
@@ -17,7 +36,7 @@ const appConfig = require('../../config/appConfig'),
  * @returns {*}
  */
 exports.loginRequired = function (req, res, next) {
-    if (req.session.user && req.session.user.isAuthenticated) {
+    if (req.user && req.user.isAuthenticated) {
         next();
     } else {
         return res.status(401).json({
@@ -37,7 +56,7 @@ exports.loginRequired = function (req, res, next) {
 exports.roleRequired = function (roleRequired) {
     return function (req, res, next) {
         exports.loginRequired(req, res, function () {
-            userModel.getUserRoles(req.session.user.id).then(function (userRoles) {
+            userModel.getUserRoles(req.user.id).then(function (userRoles) {
                 if (typeof roleRequired == 'string') {
                     if (userRoles.indexOf(roleRequired) > -1) {
                         next();
@@ -73,7 +92,7 @@ exports.roleRequired = function (roleRequired) {
  * @param {*} res
  */
 exports.register = function (req, res) {
-    if (req.session.user && req.session.user.isAuthenticated) {
+    if (req.user && req.user.isAuthenticated) {
         return res.status(401).json({
             'success': false,
             'message': 'You must log out with current account before creating a new one!'
@@ -91,13 +110,14 @@ exports.register = function (req, res) {
         let verifyEmailCode = uuidv4();
         userModel.saveUser(req.body.username, req.body.email, hashedPassword, verifyEmailCode).then(function (userId) {
             userModel.getUserById(userId).then(function (user) {
-                if (appConfig.useMailer) {
+                if (appConfig.useNodeMailer) {
                     sendEmailVerification(user.id, user.email, user.username, verifyEmailCode);
                 }
 
+                let jwtPayload;
                 // Start authenticated session only if user has verified email
                 if (!appConfig.requireVerifiedEmailToLogin) {
-                    req.session.user = {
+                    jwtPayload = {
                         isAuthenticated: true,
                         id: user.id,
                         email: user.email
@@ -108,6 +128,7 @@ exports.register = function (req, res) {
                 return res.json({
                     'success': true,
                     'data': {
+                        'jwt': signJwtWithSecret(jwtPayload),
                         'user': user
                     }
                 });
@@ -144,7 +165,7 @@ exports.register = function (req, res) {
  * @param {*} res
  */
 exports.login = function (req, res) {
-    if (req.session.user && req.session.user.isAuthenticated) {
+    if (req.user && req.user.isAuthenticated) {
         return res.status(400).json({
             'success': false,
             'message': 'A user is already logged in!'
@@ -168,7 +189,7 @@ exports.login = function (req, res) {
 
         bcrypt.compare(req.body.password, user.password).then(function (isValid) {
             if (isValid) {
-                req.session.user = {
+                let jwtPayload = {
                     isAuthenticated: (user.mfaSecret) ? false : true,
                     awaitingMFA: (user.mfaSecret) ? true : undefined,
                     id: user.id,
@@ -178,10 +199,12 @@ exports.login = function (req, res) {
                 // Don't send back the hashed password or mfa secret!
                 user.password = undefined;
                 user.mfaSecret = undefined;
-                if (req.session.user.awaitingMFA) {
+
+                if (jwtPayload.awaitingMFA) {
                     return res.json({
                         'success': true,
                         'data': {
+                            'jwt': signJwtWithSecret(jwtPayload),
                             'awaitingMfaAuth': true,
                             'message': 'Awaiting Mfa verification to complete login.'
                         }
@@ -190,6 +213,7 @@ exports.login = function (req, res) {
                     return res.json({
                         'success': true,
                         'data': {
+                            'jwt': signJwtWithSecret(jwtPayload),
                             'user': user
                         }
                     });
@@ -215,38 +239,6 @@ exports.login = function (req, res) {
 };
 
 /**
- * Logout Current Session!
- * @param {*} req 
- * @param {*} res 
- */
-exports.logout = function (req, res) {
-    if (req.session.user && req.session.user.isAuthenticated) {
-        req.session.destroy(function (error) {
-            if (error) {
-                res.status(400).json({
-                    'success': false,
-                    'message': "Unable to log you out!"
-                });
-            } else {
-                res.json({
-                    'success': true,
-                    'data': {
-                        'message': "You have been successfully logged out!"
-                    }
-                });
-            }
-        });
-    } else {
-        res.json({
-            'success': true,
-            'data': {
-                'message': "No one to logout."
-            }
-        });
-    }
-}
-
-/**
  * Change the User Password
  * @param {*} req 
  * @param {*} res 
@@ -259,7 +251,7 @@ exports.changePassword = function (req, res) {
         });
     }
 
-    userModel.getUserById(req.session.user.id, true).then(function (user) {
+    userModel.getUserById(req.user.id, true).then(function (user) {
         bcrypt.compare(req.body.currentPassword, user.password).then(function (isValid) {
             if (isValid) {
                 bcrypt.hash(req.body.newPassword, appConfig.saltRounds).then(function (hashedPassword) {
@@ -318,12 +310,12 @@ exports.forgotPassword = function (req, res) {
  */
 exports.setupMfa = function (req, res) {
     var secret = speakeasy.generateSecret();
-    var otpauthURL = speakeasy.otpauthURL({ 'secret': secret.ascii, 'label': req.session.user.email, 'issuer': appConfig.applicationName });
+    var otpauthURL = speakeasy.otpauthURL({ 'secret': secret.ascii, 'label': req.user.email, 'issuer': appConfig.applicationName });
 
-    userModel.updateUser(req.session.user.id, ['tempMfaSecret'], [secret.base32]).then(() => {
+    userModel.updateUser(req.user.id, ['tempMfaSecret'], [secret.base32]).then(() => {
         QRCode.toDataURL(otpauthURL)
             .then(url => {
-                req.session.user.awaitingMFA = true;
+                req.user.awaitingMFA = true;
                 return res.json({
                     'success': true,
                     'data': {
@@ -358,14 +350,15 @@ exports.verifyTempMfaToken = function (req, res) {
             'message': "Must pass in valid token to verify Two Factor Auth."
         });
     }
-    if (!req.session.user || !req.session.user.isAuthenticated || !req.session.user.awaitingMFA) {
+    // Need Authenticated User Awaiting MFA to continue
+    if (!req.user || !req.user.isAuthenticated || !req.user.awaitingMFA) {
         return res.status(400).json({
             'success': false,
             'message': "Mfa Verification is not required at this time."
         });
     }
 
-    userModel.getUserById(req.session.user.id, false, false, true, true).then((user) => {
+    userModel.getUserById(req.user.id, false, false, true, true).then((user) => {
         if (user.mfaSecret) {
             return res.status(400).json({
                 'success': false,
@@ -375,8 +368,8 @@ exports.verifyTempMfaToken = function (req, res) {
 
         var verified = speakeasy.totp.verify({ secret: user.tempMfaSecret, encoding: 'base32', token: req.body.token });
         if (verified) {
-            userModel.updateUser(req.session.user.id, ['tempMfaSecret', 'mfaSecret'], [null, user.tempMfaSecret]).then(() => {
-                req.session.user.awaitingMFA = false;
+            userModel.updateUser(req.user.id, ['tempMfaSecret', 'mfaSecret'], [null, user.tempMfaSecret]).then(() => {
+                req.user.awaitingMFA = false;
                 return res.json({
                     'success': true,
                     'data': "Token was successfully verified and MFA is now setup."
@@ -413,22 +406,26 @@ exports.verifyMfaToken = function (req, res) {
             'message': "Must pass in valid token to verify Two Factor Auth."
         });
     }
-    if (!req.session.user || req.session.user.isAuthenticated || !req.session.user.awaitingMFA) {
+    // Need non-authenticated user awating mfa to continue
+    if (!req.user || req.user.isAuthenticated || !req.user.awaitingMFA) {
         return res.status(400).json({
             'success': false,
             'message': "Mfa Verification is not required at this time."
         });
     }
 
-    userModel.getUserById(req.session.user.id, false, false, true).then((user) => {
+    userModel.getUserById(req.user.id, false, false, true).then((user) => {
         var verified = speakeasy.totp.verify({ secret: user.mfaSecret, encoding: 'base32', token: req.body.token });
         if (verified) {
-            req.session.user.isAuthenticated = true;
-            req.session.user.awaitingMFA = false;
+            req.user.isAuthenticated = true;
+            req.user.awaitingMFA = false;
             user.mfaSecret = undefined;
             return res.json({
                 'success': true,
-                'data': { 'user': user }
+                'data': {
+                    'jwt': signJwtWithSecret(req.user),
+                    'user': user
+                }
             });
         } else {
             return res.status(400).json({
@@ -450,7 +447,7 @@ exports.verifyMfaToken = function (req, res) {
  * @param {*} res 
  */
 exports.removeMfa = function (req, res) {
-    userModel.updateUser(req.session.user.id, ['tempMfaSecret', 'mfaSecret'], [null, null]).then(() => {
+    userModel.updateUser(req.user.id, ['tempMfaSecret', 'mfaSecret'], [null, null]).then(() => {
         return res.json({
             'success': true,
             'data': "Mfa was successfully disabled."
@@ -511,7 +508,7 @@ exports.verifyEmail = function (req, res) {
  * @param {*} res 
  */
 exports.resendEmailVerificationEmail = function (req, res) {
-    userModel.getUserById(req.session.user.id, false, true).then((user) => {
+    userModel.getUserById(req.user.id, false, true).then((user) => {
         sendEmailVerification(user.id, user.email, user.username, user.verifyEmailCode);
         return res.json({
             'success': true,
@@ -550,4 +547,12 @@ function sendEmailVerification(userId, email, username, verifyEmailCode) {
             console.log('Message sent: %s', info.messageId);
         }
     });
+}
+
+/**
+ * Sign the Payload with the Secret
+ * @param {*} payload 
+ */
+function signJwtWithSecret(payload) {
+    return jwt.sign(payload, appConfig.secret);
 }

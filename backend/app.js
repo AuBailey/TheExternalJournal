@@ -2,11 +2,10 @@
 
 const express = require('express'),
   app = express(),
-  appConfig = require('./config/appConfig'),
   authController = require('./api/auth/authController'),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
-  expressSession = require('express-session');
+  serverless = require('serverless-http');
 
 /**
  * Top Level Parser Settings
@@ -18,24 +17,9 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 /**
- * Configure and Setup Sessions
+ * On Every Request, Verify and Decode Jwt if given
  */
-let sessionConfig = {
-  resave: true,
-  saveUninitialized: false,
-  secret: appConfig.secret
-}
-
-if (appConfig.sessionMaxAgeMs) {
-  sessionConfig.cookie.maxAge = appConfig.sessionMaxAgeMs;
-}
-
-if (app.get('env') === 'production') {
-  app.set('trust proxy', 1); // trust first proxy
-  sessionConfig.cookie.secure = true; // serve secure cookies
-}
-
-app.use(expressSession(sessionConfig));
+app.use((req, res, next) => authController.verifyAndDecodeJwt(req, res, next)); 
 
 /**
  * Routing
@@ -44,11 +28,4 @@ app.use(expressSession(sessionConfig));
 const api = require('./api/apiRouter');
 app.use('/api', api);
 
-/**
- * Serve Static Files
- */
-if (appConfig.staticRoute) {
-  app.use(express.static(appConfig.staticRoute));
-}
-
-module.exports = app;
+module.exports.handler = serverless(app);

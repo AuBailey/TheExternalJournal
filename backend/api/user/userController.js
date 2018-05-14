@@ -8,7 +8,7 @@ const userModel = require('./userModel');
  * @param {*} res 
  */
 exports.getLoggedInUser = function (req, res) {
-    userModel.getUserById(req.session.user.id).then(function (user) {
+    userModel.getUserById(req.user.id).then(function (user) {
         return res.json({
             'success': true,
             'data': {
@@ -18,7 +18,7 @@ exports.getLoggedInUser = function (req, res) {
     }).catch((error) => {
         return res.status(400).json({
             'success': false,
-            'message': "Unable to retrieve user with id: " + req.session.user.id
+            'message': "Unable to retrieve user with id: " + req.user.id
         });
     })
 };
@@ -85,7 +85,7 @@ exports.updateUsername = function (req, res) {
         });
     }
     
-    userModel.updateUser(req.session.user.id, ['username'], [req.body.username]).then(function (changedRows) {
+    userModel.updateUser(req.user.id, ['username'], [req.body.username]).then(function (changedRows) {
         return res.json({
             'success': true,
             'data': {
@@ -95,7 +95,7 @@ exports.updateUsername = function (req, res) {
     }).catch((error) => {
         return res.status(400).json({
             'success': false,
-            'message': "Unable to update user with id: " + req.session.user.id
+            'message': "Unable to update user with id: " + req.user.id
         });
     })
 };
@@ -106,7 +106,7 @@ exports.updateUsername = function (req, res) {
  * @param {*} res 
  */
 exports.deleteLoggedInUser = function (req, res) {
-    userModel.deleteUser(req.session.user.id).then(function (userId) {
+    userModel.deleteUser(req.user.id).then(function (userId) {
         return res.json({
             'success': true,
             'data': {
@@ -116,7 +116,7 @@ exports.deleteLoggedInUser = function (req, res) {
     }).catch((error) => {
         return res.status(400).json({
             'success': false,
-            'message': "Unable to delete user with id: " + req.session.user.id
+            'message': "Unable to delete user with id: " + req.user.id
         });
     })
 };
@@ -127,7 +127,7 @@ exports.deleteLoggedInUser = function (req, res) {
  * @param {*} res 
  */
 exports.getUserRoles = function (req, res) {
-    userModel.getUserRoles(req.session.user.id).then(function (userRoles) {
+    userModel.getUserRoles(req.user.id).then(function (userRoles) {
         return res.json({
             'success': true,
             'data': {
@@ -137,7 +137,7 @@ exports.getUserRoles = function (req, res) {
     }).catch((error) => {
         return res.status(400).json({
             'success': false,
-            'message': "Unable to get the roles of user with id: " + req.session.user.id
+            'message': "Unable to get the roles of user with id: " + req.user.id
         });
     })
 }

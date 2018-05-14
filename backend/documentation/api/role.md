@@ -1,35 +1,52 @@
 # Role
+
 ## [<- Back](../api.md)
 
-# Get Role By Id
-Requires user performing request to have admin role
-#### **Get** `/api/role/:roleId`
+## Get Role By Id
 
-# Get All Roles
 Requires user performing request to have admin role
-#### **Get** `/api/role/all`
 
-# Add Role
+### Get `/api/role/:roleId`
+
+## Get All Roles
+
 Requires user performing request to have admin role
-#### **POST** `/api/role`
-#### BODY
+
+### Get `/api/role/all`
+
+## Add Role
+
+Requires user performing request to have admin role
+
+### POST `/api/role`
+
+### BODY
+
 Key | Description | Required
 --- | --- | ---
 roleName | Name of role to add | *
 
-# Update Role
+## Update Role
+
 Requires user performing request to have admin role
-#### **PUT** `/api/role`
-#### BODY
+
+### PUT `/api/role`
+
+### BODY
+
 Key | Description | Required
 --- | --- | ---
 roleId | Name of role to add | *
 roleName | Name of role to add | *
 
-# Delete Role
+## Delete Role
+
 Requires user performing request to have admin role
-#### **Delete** `/api/role`
-#### BODY
+
+### Delete `/api/role`
+
+### BODY
+
 Key | Description | Required
 --- | --- | ---
 roleId | Id of role to delete | *
