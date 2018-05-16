@@ -11,6 +11,7 @@ import pro200.neumont.edu.externaljournal.R;
 {
     private Button mLoginButton;
     private EditText username;
+    private EditText password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -19,10 +20,14 @@ import pro200.neumont.edu.externaljournal.R;
         setContentView(R.layout.activity_login);
 
         mLoginButton = (Button) findViewById(R.id.login_btn);
+
+        username = (EditText) findViewById(R.id.username_edit_text);
+        password = (EditText) findViewById(R.id.password_edit_text);
+        username.toString();
+        password.toString();
+        //just need to make the method call in the mLoginButton actionListener 
         mLoginButton.setOnClickListener((v) -> {
             Toast.makeText(this, "Denied", Toast.LENGTH_SHORT).show();
         });
-        username = (EditText) findViewById(R.id.username_edit_text);
-        username.getText().toString();
     }
 }
