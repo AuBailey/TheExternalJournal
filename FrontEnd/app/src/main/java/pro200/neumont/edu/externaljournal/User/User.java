@@ -10,6 +10,17 @@ public class User
     private String userName;
     private String password;
     private String email;
+    private String token;
+
+    public String getToken()
+    {
+        return token;
+    }
+
+    public void setToken(String token)
+    {
+        this.token = token;
+    }
 
     public String getPassword()
     {
@@ -18,7 +29,7 @@ public class User
 
     public void setPassword(String password)
     {
-        if (password != null)
+        if (password != null && password != "")
         {
             this.password = password;
         }
@@ -31,7 +42,7 @@ public class User
 
     public void setEmail(String email)
     {
-        if (email != null)
+        if (email != null && email != "")
         {
             this.email = email;
         }
@@ -44,7 +55,10 @@ public class User
 
     public void setJournals(List<Journal> journals)
     {
-        this.journals = journals;
+        if (journals != null)
+        {
+            this.journals = journals;
+        }
     }
 
     public String getUserName()
@@ -54,17 +68,18 @@ public class User
 
     public void setUserName(String userName)
     {
-        if (userName != null)
+        if (userName != null && userName != "")
         {
             this.userName = userName;
         }
     }
 
-    public User(String userName, String email, String password, List<Journal> journals)
+    public User(String userName, String email, String password, List<Journal> journals, String token)
     {
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.journals = journals;
+        this.token = token;
     }
 }

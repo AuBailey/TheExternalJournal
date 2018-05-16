@@ -17,7 +17,10 @@ public class Journal
 
     public void setEntries(List<Entry> entries)
     {
-        this.entries = entries;
+        if (entries != null)
+        {
+            this.entries = entries;
+        }
     }
 
     public String getName()
@@ -27,7 +30,10 @@ public class Journal
 
     public void setName(String name)
     {
-        this.name = name;
+        if (name != null && name != "")
+        {
+            this.name = name;
+        }
     }
 
     public int getId()

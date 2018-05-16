@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import pro200.neumont.edu.externaljournal.R;
 
-public class LoginActivity extends AppCompatActivity
+    public class LoginActivity extends AppCompatActivity
 {
     private Button mLoginButton;
     private EditText username;
