@@ -7,18 +7,18 @@ import java.net.URL;
 
 
 public class HttpRequests {
-     static URL url;
+    static URL url;
 
-public static void doStuff() {
+    public static void doStuff() {
         try {
-            url = new URL("https://ywudticnj5.execute-api.us-east-1.amazonaws.com/production/api/auth/login");
+            url = new URL("https://nuproject.tech/api/auth/login");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setDoOutput(true);
 
             JsonObject cred = new JsonObject();
-            
+            https://nuproject.tech/api/auth/register
             cred.addProperty("email","isaiahcjc5@gmail.com");
             cred.addProperty("password","password123");
 
