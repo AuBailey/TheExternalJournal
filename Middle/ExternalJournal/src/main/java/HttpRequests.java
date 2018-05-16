@@ -1,15 +1,23 @@
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 public class HttpRequests {
     static URL url;
 
-    public static void doStuff() {
+    public static User doLogin() {
         try {
             url = new URL("https://nuproject.tech/api/auth/login");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -18,7 +26,7 @@ public class HttpRequests {
             con.setDoOutput(true);
 
             JsonObject cred = new JsonObject();
-            https://nuproject.tech/api/auth/register
+//            https://nuproject.tech/api/auth/register
             cred.addProperty("email","isaiahcjc5@gmail.com");
             cred.addProperty("password","password123");
 
@@ -34,6 +42,10 @@ public class HttpRequests {
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
+            String[] strings =  content.toString().split(",");
+            for (int i = 0; i < strings.length; i++) {
+                System.out.println(i + " : " + strings[i]);
+            }
             in.close();
             con.disconnect();
             System.out.println(content.toString());
@@ -43,10 +55,11 @@ public class HttpRequests {
         catch (IOException e){
             e.printStackTrace();
         }
+        return null;
     }
 
     public static void main(String[] args) {
-        doStuff();
+        doLogin();
     }
 
 
