@@ -5,8 +5,9 @@ service: External-Journal
 provider:
   name: aws
   runtime: nodejs6.10
-  stage: production
+  stage: local
   region: us-east-1
+  environment: ${file(./config/env.yml):${opt:stage, self:provider.stage}}
   vpc:
       securityGroupIds:
         - sg-618f7f1a
