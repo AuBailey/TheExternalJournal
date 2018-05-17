@@ -9,3 +9,4 @@
 * [Authentication](./api/auth.md)
 * [Role](./api/role.md)
 * [User](./api/user.md)
+* [Journal](./api/journal.md)
