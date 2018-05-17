@@ -19,6 +19,14 @@ provider:
         - subnet-21451557
         - subnet-ddcea8f7
 
+package:
+  exclude:
+    - .vscode/**
+    - bin/**
+    - docker/**
+    - documentation/**
+    - sql/**
+
 plugins:
   - serverless-offline
 
