@@ -10,7 +10,7 @@ const appConfig = {
     requireVerifiedEmailToLogin: false,
     saltRounds: 12,
     secret: '******',
-    tokenMaxAgeDays: '30d',
+    tokenMaxAgeSeconds: undefined,
     useNodeMailer: true
 };
 

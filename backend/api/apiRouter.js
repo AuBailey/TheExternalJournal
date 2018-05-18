@@ -13,5 +13,9 @@ api.use('/user', user);
 const role = require('./role/roleRouter');
 api.use('/role', role);
 
+// Set /api/journal to use journal
+const journal = require('./journal/journalRouter');
+api.use('/journal', journal);
+
 // Need to export the api variable for use in app.js.
 module.exports = api;

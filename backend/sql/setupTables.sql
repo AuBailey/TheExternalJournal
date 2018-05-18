@@ -34,3 +34,12 @@ CREATE TABLE UsersRolesXRef
     CONSTRAINT Roles_fk FOREIGN KEY (roleId) REFERENCES Roles (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE UNIQUE INDEX UsersRolesXRef_userId_roleId_uindex ON UsersRolesXRef (userId, roleId);
+
+# Journals Table
+CREATE TABLE Journals
+(
+    id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    userId int NOT NULL,
+    name VARCHAR(50),
+    CONSTRAINT Users_fk FOREIGN KEY (userId) REFERENCES Users (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
