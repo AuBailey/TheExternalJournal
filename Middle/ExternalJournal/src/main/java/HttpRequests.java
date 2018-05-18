@@ -13,6 +13,7 @@ public class HttpRequests {
     static URL url;
     static boolean status;
     static String message;
+    static StringBuffer content;
 
     public static ValidLoginObject doLogin(String email,String password) {
         try {
@@ -34,7 +35,7 @@ public class HttpRequests {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer content = new StringBuffer();
+            content = new StringBuffer();
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
@@ -43,10 +44,7 @@ public class HttpRequests {
                 status = true;
                  message = parseJwt(content.toString());
             }
-            else {
-                status = false;
-                message = parseError(content.toString());
-            }
+
 
 
             in.close();
@@ -55,9 +53,8 @@ public class HttpRequests {
         }
 
         catch (IOException e){
-
-            e.printStackTrace();
-
+            status = false;
+            message = "Authentication Error";
         }
 
         System.out.println(status);
@@ -74,7 +71,7 @@ public class HttpRequests {
 
 
     public static void main(String[] args) {
-        doLogin("isaiahcjc5@gmail.com","password");
+        doLogin("isaiahcjc5@gmahujhjil.com","password");
     }
 
     public static String parseJwt(String jsonLine) {
