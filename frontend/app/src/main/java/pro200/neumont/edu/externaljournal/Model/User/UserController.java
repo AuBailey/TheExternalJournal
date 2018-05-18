@@ -1,6 +1,6 @@
-package pro200.neumont.edu.externaljournal.User;
+package pro200.neumont.edu.externaljournal.Model.User;
 
-import pro200.neumont.edu.externaljournal.Journal.Journal;
+import pro200.neumont.edu.externaljournal.Model.Journal.Journal;
 
 public class UserController {
 

@@ -1,4 +1,4 @@
-package pro200.neumont.edu.externaljournal.Entry;
+package pro200.neumont.edu.externaljournal.Model.Entry;
 
 import java.util.Date;
 

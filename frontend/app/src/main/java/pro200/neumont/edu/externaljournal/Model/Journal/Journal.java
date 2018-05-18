@@ -1,6 +1,6 @@
-package pro200.neumont.edu.externaljournal.Journal;
+package pro200.neumont.edu.externaljournal.Model.Journal;
 
-import pro200.neumont.edu.externaljournal.Entry.Entry;
+import pro200.neumont.edu.externaljournal.Model.Entry.Entry;
 
 import java.util.List;
 
