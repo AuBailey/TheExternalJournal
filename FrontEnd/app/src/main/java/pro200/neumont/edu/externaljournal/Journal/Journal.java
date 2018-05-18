@@ -1,4 +1,6 @@
-package pro200.neumont.edu.externaljournal.Models;
+package pro200.neumont.edu.externaljournal.Journal;
+
+import pro200.neumont.edu.externaljournal.Entry.Entry;
 
 import java.util.List;
 
@@ -15,7 +17,10 @@ public class Journal
 
     public void setEntries(List<Entry> entries)
     {
-        this.entries = entries;
+        if (entries != null)
+        {
+            this.entries = entries;
+        }
     }
 
     public String getName()
@@ -25,7 +30,10 @@ public class Journal
 
     public void setName(String name)
     {
-        this.name = name;
+        if (name != null && name != "")
+        {
+            this.name = name;
+        }
     }
 
     public int getId()

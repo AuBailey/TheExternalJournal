@@ -1,4 +1,4 @@
-package pro200.neumont.edu.externaljournal.Models;
+package pro200.neumont.edu.externaljournal.Entry;
 
 import java.util.Date;
 
@@ -17,7 +17,7 @@ public class Entry
 
     public void setName(String name)
     {
-        if (name != "")
+        if (name != null && name != "")
         {
             this.name = name;
         } else
@@ -46,7 +46,10 @@ public class Entry
 
     public void setContent(String content)
     {
-        this.content = content;
+        if (content != null)
+        {
+            this.content = content;
+        }
     }
 
     public double getLatitude()
