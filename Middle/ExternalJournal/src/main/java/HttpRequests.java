@@ -1,5 +1,4 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +11,10 @@ import java.net.URL;
 
 public class HttpRequests {
     static URL url;
+    static boolean status;
+    static String message;
 
-    public static User doLogin(String email,String password) {
+    public static ValidLoginObject doLogin(String email,String password) {
         try {
             url = new URL("https://nuproject.tech/api/auth/login");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -30,13 +31,6 @@ public class HttpRequests {
             os.write(cred.toString().getBytes("UTF-8"));
             os.close();
 
-
-
-
-            int status = con.getResponseCode();
-            if(con.getResponseCode() == 200){
-
-            }
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -45,50 +39,18 @@ public class HttpRequests {
                 content.append(inputLine);
             }
 
-
-
-            Gson gson = new Gson();
-            int id;
-            String token;
-            String mail;
-            String username;
-            String[] strings =  content.toString().split(",");
-
-
-
-
-            for (int i = 0; i < strings.length; i++) {
-                if (strings[i].contains("id")){
-                   id =  getId(strings[i]);
-                    System.out.println(id);
-                }
-                if (strings[i].contains("jwt")){
-                    token = getToken(strings[i]);
-                    System.out.println(token);
-                }
-                if (strings[i].contains("\"email\"")){
-                    mail = getEmail(strings[i]);
-                    System.out.println(mail);
-                }
-                if (strings[i].contains("username")){
-                    username = getUserNAme(strings[i]);
-                }
-                    System.out.println(strings[i]);
-
-
+            if(con.getResponseCode() == 200){
+                status = true;
+                 message = parseJwt(content.toString());
             }
-
-            User u = gson.fromJson(content.toString(), User.class);
-            System.out.println(u.toString());
+            else {
+                status = false;
+                message = parseError(content.toString());
+            }
 
 
             in.close();
             con.disconnect();
-            System.out.println(content.toString());
-
-        } catch (MalformedURLException e) {
-
-            e.printStackTrace();
 
         }
 
@@ -98,39 +60,30 @@ public class HttpRequests {
 
         }
 
-        return null;
+        System.out.println(status);
+        System.out.println(message);
+        return new ValidLoginObject(status,message);
     }
 
-    private static String getUserNAme(String string) {
-        String username;
-
+    private static String parseError(String s) {
+        JsonElement jelement = new JsonParser().parse(s);
+        JsonObject  message = jelement.getAsJsonObject();
+        message = message.getAsJsonObject("message");
+        return message.getAsString();
     }
 
-    private static String getEmail(String string) {
-        String email = "";
-        String[] temp = string.split(":");
-        email = temp[1];
-        return email;
-    }
 
     public static void main(String[] args) {
-        doLogin("isaiahcjc5@gmail.com","password123");
+        doLogin("isaiahcjc5@gmail.com","password");
     }
 
-    public static int getId(String s){
-        String id = "";
-        String[] temp = s.split("\\{");
-        String[] ids = temp[1].split(":");
-        id = ids[1];
-        return Integer.parseInt(id);
+    public static String parseJwt(String jsonLine) {
+        JsonElement jelement = new JsonParser().parse(jsonLine);
+        JsonObject  jobject = jelement.getAsJsonObject();
+        jobject = jobject.getAsJsonObject("data");
+        JsonElement data = new JsonParser().parse(jobject.toString());
+        JsonObject jsonObject = data.getAsJsonObject();
+        String result = jsonObject.get("jwt").getAsString();
+        return result;
     }
-
-    public static String getToken(String s){
-            String token;
-        String[] temp = s.split("\\{");
-        String[] ids = temp[1].split(":");
-        token = ids[1];
-        return token;
-    }
-
 }
