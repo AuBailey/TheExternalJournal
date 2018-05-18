@@ -25,7 +25,6 @@ import pro200.neumont.edu.externaljournal.R;
         password = (EditText) findViewById(R.id.password_edit_text);
         username.toString();
         password.toString();
-        //just need to make the method call in the mLoginButton actionListener 
         mLoginButton.setOnClickListener((v) -> {
             Toast.makeText(this, "Denied", Toast.LENGTH_SHORT).show();
         });
