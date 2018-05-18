@@ -69,4 +69,14 @@ public class User
         this.password = password;
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "journals=" + journals +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
