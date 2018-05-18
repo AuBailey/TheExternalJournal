@@ -7,8 +7,6 @@ import java.util.List;
 public class User
 {
     private List<Journal> journals;
-    private String userName;
-    private String password;
     private String email;
     private String token;
 
@@ -20,19 +18,6 @@ public class User
     public void setToken(String token)
     {
         this.token = token;
-    }
-
-    public String getPassword()
-    {
-        return password;
-    }
-
-    public void setPassword(String password)
-    {
-        if (password != null && password != "")
-        {
-            this.password = password;
-        }
     }
 
     public String getEmail()
@@ -61,24 +46,10 @@ public class User
         }
     }
 
-    public String getUserName()
-    {
-        return userName;
-    }
 
-    public void setUserName(String userName)
+    public User(String email, List<Journal> journals, String token)
     {
-        if (userName != null && userName != "")
-        {
-            this.userName = userName;
-        }
-    }
-
-    public User(String userName, String email, String password, List<Journal> journals, String token)
-    {
-        this.userName = userName;
         this.email = email;
-        this.password = password;
         this.journals = journals;
         this.token = token;
     }
