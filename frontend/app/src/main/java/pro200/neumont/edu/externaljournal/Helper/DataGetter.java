@@ -29,6 +29,25 @@ public class DataGetter {
         return new LoginValidationObj(requestHelper.isSucceed(), requestHelper.getResponseMsg());
     }
 
+    public static RegisterValidationObj RegisterValidation(String email, String username, String password) throws IOException
+    {
+        HttpRequestHelper requestHelper = new HttpRequestHelper();
+
+        String url = "https://nuproject.tech/api/auth/register";
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+
+        Map<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("username", username);
+        body.put("password", password);
+
+        requestHelper.doPost(url, headers, body);
+
+        return new RegisterValidationObj(requestHelper.isSucceed(), requestHelper.getResponseMsg());
+    }
+
     public static List<Journal> getJournals(String token) {
         return null;
     }

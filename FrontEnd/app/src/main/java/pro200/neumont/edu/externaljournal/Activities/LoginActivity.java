@@ -1,5 +1,6 @@
 package pro200.neumont.edu.externaljournal.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity {
     private Button mLoginButton;
+    private Button mCreateProfileButton;
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private LoginValidationObj validationObj;
@@ -23,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mLoginButton = (Button) findViewById(R.id.login_btn);
+        mCreateProfileButton = (Button) findViewById(R.id.createProfile_btn);
 
         mUsernameEditText = (EditText) findViewById(R.id.username_edit_text);
         mPasswordEditText = (EditText) findViewById(R.id.password_edit_text);
@@ -36,6 +39,15 @@ public class LoginActivity extends AppCompatActivity {
 
 //            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
         });
+        mCreateProfileButton.setOnClickListener((v) -> {
+            launchActivity();
+        });
+    }
+
+    private void launchActivity()
+    {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     private void doLogin(String username, String password) {
