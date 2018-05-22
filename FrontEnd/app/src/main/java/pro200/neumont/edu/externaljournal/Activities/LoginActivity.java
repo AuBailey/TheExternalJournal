@@ -6,9 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import pro200.neumont.edu.externaljournal.Helper.DataGetter;
-import pro200.neumont.edu.externaljournal.Helper.HttpRequestHelper;
 import pro200.neumont.edu.externaljournal.Helper.LoginValidationObj;
-import pro200.neumont.edu.externaljournal.Helper.RequestHelper;
 import pro200.neumont.edu.externaljournal.R;
 
 import java.io.IOException;
