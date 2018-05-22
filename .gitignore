@@ -129,3 +129,10 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+frontend/\.settings/
+
+.classpath
+.project
+.settings/
+.loadpath
+.recommenders

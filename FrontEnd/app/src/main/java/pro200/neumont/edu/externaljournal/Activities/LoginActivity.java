@@ -30,14 +30,6 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("mUsernameEditText - " + mUsernameEditText.getText().toString());
             System.out.println("mPasswordEditText - " + mPasswordEditText.getText().toString());
 
-//            LoginValidationObj loginObj = null;
-//            try {
-//                loginObj = DataGetter.LoginValidation(
-//                        mUsernameEditText.getText().toString().trim(),
-//                        mPasswordEditText.getText().toString().trim());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             doLogin(mUsernameEditText.getText().toString().trim(), mPasswordEditText.getText().toString().trim());
 //            String message = validationObj.isSuccess() ? validationObj.getMessage() : "Failed";
@@ -52,7 +44,9 @@ public class LoginActivity extends AppCompatActivity {
                 LoginValidationObj loginObj = DataGetter.LoginValidation(
                         mUsernameEditText.getText().toString().trim(),
                         mPasswordEditText.getText().toString().trim());
-                System.out.println(loginObj.getMessage() + " - " + loginObj.isSuccess());
+//                LoginValidationObj loginObj = DataGetter.LoginValidation(
+//                        "test@gmail.com", "test");
+//                System.out.println(loginObj.getMessage() + " - " + loginObj.isSuccess());
 
                 Toast.makeText(this, loginObj.getMessage(), Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
