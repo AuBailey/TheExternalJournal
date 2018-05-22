@@ -554,5 +554,8 @@ function sendEmailVerification(userId, email, username, verifyEmailCode) {
  * @param {*} payload 
  */
 function signJwtWithSecret(payload) {
+    if (appConfig.tokenMaxAgeSeconds){
+        return jwt.sign(payload, appConfig.secret, {expiresIn: appConfig.tokenMaxAgeSeconds});
+    }
     return jwt.sign(payload, appConfig.secret);
 }

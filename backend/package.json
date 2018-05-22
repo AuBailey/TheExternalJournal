@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Serverless Spine Express allows a developer to setup a Serverless Express Js Backend with built in User and Role based Authentication.",
   "scripts": {
-    "setup": "node ./bin/setup"
+    "setup": "node ./bin/setup",
+    "start": "node ./node_modules/serverless/bin/serverless offline start"
   },
   "author": "Weasnerb",
   "license": "MIT",
