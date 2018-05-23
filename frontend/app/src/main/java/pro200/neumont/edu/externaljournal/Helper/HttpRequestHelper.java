@@ -19,7 +19,7 @@ public class HttpRequestHelper {
     private String responseFromServer;
     private String responseMsg;
 
-    public void doPost(String url, Map<String, String> headers, Map<String, String> body) throws IOException {
+    public void doPost(String url, Map<String, String> headers, Map<String, String> body) throws Exception {
         client = new OkHttpClient();
 
         requestBody = processBodyFromMap(body).build();
@@ -50,13 +50,16 @@ public class HttpRequestHelper {
                 }
             }
 
+
             public void onFailure(Call call, IOException e) {
                 responseFromServer = "Unexpected error occured";
             }
         });
+
+        wait(50000);
     }
 
-    private Headers.Builder processHeaderFromMap(Map<String, String> headers) {
+    public static Headers.Builder processHeaderFromMap(Map<String, String> headers) {
         Headers.Builder header = new Headers.Builder();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             header.add(entry.getKey(), entry.getValue());
@@ -64,7 +67,7 @@ public class HttpRequestHelper {
         return header;
     }
 
-    private FormBody.Builder processBodyFromMap(Map<String, String> body) {
+    public static  FormBody.Builder processBodyFromMap(Map<String, String> body) {
         FormBody.Builder formBody = new FormBody.Builder();
         for (Map.Entry<String, String> entry : body.entrySet()) {
             formBody.add(entry.getKey(), entry.getValue());
@@ -72,11 +75,11 @@ public class HttpRequestHelper {
         return formBody;
     }
 
-    public boolean isSucceed() {
-        return isSucceed;
-    }
-
-    public String getResponseMsg() {
-        return responseMsg;
-    }
+//    public boolean isSucceed() {
+//        return isSucceed;
+//    }
+//
+//    public String getResponseMsg() {
+//        return responseMsg;
+//    }
 }

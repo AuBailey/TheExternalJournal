@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class DataGetter {
 
-    public static LoginValidationObj LoginValidation(String username, String password) throws IOException {
+    public static LoginValidationObj LoginValidation(String username, String password) throws Exception {
         HttpRequestHelper requestHelper = new HttpRequestHelper();
 
         String url = "https://nuproject.tech/api/auth/login";
@@ -25,7 +25,7 @@ public class DataGetter {
         body.put("password", password);
         requestHelper.doPost(url, headers, body);
 
-        return new LoginValidationObj(requestHelper.isSucceed(), requestHelper.getResponseMsg());
+        return null;//new LoginValidationObj(requestHelper.isSucceed(), requestHelper.getResponseMsg());
     }
 
     public static RegisterValidationObj RegisterValidation(String email, String username, String password) throws IOException
