@@ -37,8 +37,13 @@ public class RegisterActivity  extends AppCompatActivity
         mPasswordConfirmationEditText = findViewById(R.id.passwordConfirmation_edit_text);
 
         mRegisterButton.setOnClickListener((v) -> {
-            if(!mPasswordEditText.getText().toString().equals(mPasswordConfirmationEditText.getText().toString()))
+            if(mEmailEditText.getText().toString().trim().equals("") ||
+                    mUsernameEditText.getText().toString().trim().equals("") ||
+                    mPasswordEditText.getText().toString().trim().equals("") ||
+                    mPasswordConfirmationEditText.getText().toString().trim().equals(""))
             {
+                Toast.makeText(this, "All fields must not be empty.", Toast.LENGTH_SHORT).show();
+            }else if(!mPasswordEditText.getText().toString().equals(mPasswordConfirmationEditText.getText().toString())){
                 Toast.makeText(this, "Passwords must match.", Toast.LENGTH_SHORT).show();
             }else{
                 doRegister(mEmailEditText.getText().toString().trim(),
