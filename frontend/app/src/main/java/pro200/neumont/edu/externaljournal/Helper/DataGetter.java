@@ -23,7 +23,6 @@ public class DataGetter {
         Map<String, String> body = new HashMap<>();
         body.put("email", username);
         body.put("password", password);
-
         requestHelper.doPost(url, headers, body);
 
         return new LoginValidationObj(requestHelper.isSucceed(), requestHelper.getResponseMsg());
