@@ -64,6 +64,7 @@ exports.updateRole = function (id, fields, values) {
     return new Promise((resolve, reject) => {
         if (fields.length != values.length) {
             reject("Number of fields and values do not match.")
+            return;
         }
         var sql = 'UPDATE Roles SET '
         for (let fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
@@ -80,11 +81,7 @@ exports.updateRole = function (id, fields, values) {
             if (error) {
                 reject(error);
             } else {
-                if (results.changedRows == 0) {
-                    reject();
-                } else {
-                    resolve(results);                    
-                }
+                resolve(results);
             }
         });
     });
