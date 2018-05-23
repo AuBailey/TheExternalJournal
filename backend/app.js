@@ -21,6 +21,8 @@ app.use(cookieParser());
  */
 app.use((req, res, next) => authController.verifyAndDecodeJwt(req, res, next)); 
 
+app.set('x-powered-by', false);
+
 /**
  * Routing
  */

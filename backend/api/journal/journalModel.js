@@ -40,7 +40,7 @@ exports.getUsersJournals = function(userId) {
 }
 
 /**
- * 
+ * Save/create a Journal
  * @param {string} journalName 
  * @param {string} userId 
  */
@@ -67,6 +67,7 @@ exports.updateJournal = function (id, userId, fields, values) {
   return new Promise((resolve, reject) => {
       if (fields.length != values.length) {
           reject("Number of fields and values do not match.")
+          return;
       }
       var sql = 'UPDATE Journals SET '
       for (let fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
@@ -84,11 +85,7 @@ exports.updateJournal = function (id, userId, fields, values) {
           if (error) {
               reject(error);
           } else {
-              if (results.changedRows == 0) {
-                  reject();
-              } else {
-                  resolve(results);                    
-              }
+            resolve(results);
           }
       });
   });
