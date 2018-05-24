@@ -5,7 +5,7 @@ const express = require('express'),
 
 router.get('/:entryId(\\d+)', authController.loginRequired, entryController.getJournalEntryById);
 
-router.get('/all/:journalId', authController.loginRequired, entryController.getJournalEntries);
+router.get('/all/:journalId(\\d+)', authController.loginRequired, entryController.getJournalEntries);
 
 router.post('/', authController.loginRequired, entryController.createEntry);
 
