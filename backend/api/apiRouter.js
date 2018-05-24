@@ -21,5 +21,9 @@ api.use('/journal', journal);
 const entry = require('./entry/entryRouter');
 api.use('/entry', entry);
 
+// Set /api/upload to use upload
+const upload = require('./upload/uploadRouter');
+api.use('/upload', upload);
+
 // Need to export the api variable for use in app.js.
 module.exports = api;
