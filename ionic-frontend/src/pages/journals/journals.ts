@@ -13,9 +13,7 @@ export class JournalsPage {
   journals$: Journal[];
 
   constructor(public navCtrl: NavController, public journals: Journals, public modalCtrl: ModalController) {
-    this.journals.getAll().share().subscribe(res => {
-      this.journals$ = res.data.journals;
-    } );
+    this.journals.getAll().subscribe(res => this.journals$ = res['data']['journals']);
   }
 
   ionViewDidLoad() {
@@ -41,8 +39,8 @@ export class JournalsPage {
 
   deleteJournal(journal) {
     //TODO: Prompt if sure they want to delete
-    this.journals.delete(journal).subscribe(response => {
-      if (response.success) {
+    this.journals.delete(journal).subscribe(resp => {
+      if (resp['success']) {
         this.journals$.splice(this.journals$.indexOf(journal), 1);
       }
     });
