@@ -5,15 +5,19 @@
  */
 const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-  host: process.env.mysqlHost,
-  user: process.env.mysqlUser,
-  password: process.env.mysqlPassword,
-  database: process.env.mysqlDatabase
-});
+function getConnection() {
+  const connection = mysql.createConnection({
+    host: process.env.mysqlHost,
+    user: process.env.mysqlUser,
+    password: process.env.mysqlPassword,
+    database: process.env.mysqlDatabase
+  });
 
-connection.connect(function (error) {
-  if (error) console.log(error);
-});
+  connection.connect(function (error) {
+    if (error) console.error(error);
+  });
+  return connection;
+}
 
-module.exports = connection;
+
+module.exports = getConnection();
