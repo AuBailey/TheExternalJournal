@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, AlertController } from 'ionic-angular';
 
 import { Journal } from '../../models/journal';
 import { Journals } from '../../providers';
@@ -12,7 +12,7 @@ import { Journals } from '../../providers';
 export class JournalsPage {
   journals$: Journal[];
 
-  constructor(public navCtrl: NavController, public journals: Journals, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public journals: Journals, public modalCtrl: ModalController, private alertCtrl: AlertController) {
     this.journals.getAll().subscribe(res => this.journals$ = res['data']['journals']);
   }
 
@@ -27,7 +27,12 @@ export class JournalsPage {
     let addModal = this.modalCtrl.create('JournalCreatePage');
     addModal.onDidDismiss(journal => {
       if (journal) {
-        this.journals.add(journal);
+        this.journals.add(journal).subscribe(resp => {
+          if (resp['success']) {
+            journal.id = resp['data']['journalId'];
+            this.journals$.push(journal);
+          }
+        })
       }
     })
     addModal.present();
@@ -39,11 +44,28 @@ export class JournalsPage {
 
   deleteJournal(journal) {
     //TODO: Prompt if sure they want to delete
-    this.journals.delete(journal).subscribe(resp => {
-      if (resp['success']) {
-        this.journals$.splice(this.journals$.indexOf(journal), 1);
-      }
+    let alert = this.alertCtrl.create({
+      title: 'Confirm delete Journal',
+      message: 'Are you sure you want to permanently delete this Journal and all it\'s Entries?',
+      buttons: [
+        {
+          text: 'No',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.journals.delete(journal).subscribe(resp => {
+              if (resp['success']) {
+                this.journals$.splice(this.journals$.indexOf(journal), 1);
+              }
+            });
+          }
+        }
+      ]
     });
+    alert.present();
   }
 
   /**
