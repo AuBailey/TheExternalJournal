@@ -42,9 +42,9 @@ public class DataGetter {
         body.put("username", username);
         body.put("password", password);
 
-        requestHelper.doPost(url, headers, body);
+//        requestHelper.doPost(url, headers, body);
 
-        return new RegisterValidationObj(requestHelper.isSucceed(), requestHelper.getResponseMsg());
+        return null; //new RegisterValidationObj(requestHelper.isSucceed(), requestHelper.getResponseMsg());
     }
 
     public static List<Journal> getJournals(String token) {

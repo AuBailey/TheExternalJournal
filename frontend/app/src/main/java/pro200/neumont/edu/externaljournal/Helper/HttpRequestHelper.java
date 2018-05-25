@@ -56,7 +56,6 @@ public class HttpRequestHelper {
             }
         });
 
-        wait(50000);
     }
 
     public static Headers.Builder processHeaderFromMap(Map<String, String> headers) {
