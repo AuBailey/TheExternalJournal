@@ -16,20 +16,16 @@ export class MenuPage {
   // A reference to the ion-nav in our component
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = 'ContentPage';
+  pageRoot: any = 'JournalsPage';
 
   pages: PageList;
 
   constructor(public navCtrl: NavController) {
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Sign in', component: 'LoginPage' },
-      { title: 'Signup', component: 'SignupPage' }
+      { title: 'Journals', component: 'JournalsPage' },
+      { title: 'Settings', component: 'SettingsPage' }
     ];
-  }
-
-  ionViewDidLoad() {
-    console.log('Hello MenuPage Page');
   }
 
   openPage(page: PageItem) {

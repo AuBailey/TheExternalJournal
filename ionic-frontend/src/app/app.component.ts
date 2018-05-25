@@ -3,56 +3,29 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Nav, Platform } from 'ionic-angular';
 
-import { LoginPage } from '../pages';
-import { Settings } from '../providers';
+import { LoginPage, MainPage } from '../pages';
+import { User } from '../providers';
 
 @Component({
-  template: `<ion-menu [content]="content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Pages</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <ion-list>
-        <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-          {{p.title}}
-        </button>
-      </ion-list>
-    </ion-content>
-
-  </ion-menu>
-  <ion-nav #content [root]="rootPage"></ion-nav>`
+  template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  rootPage = LoginPage;
+  rootPage: any;
 
   @ViewChild(Nav) nav: Nav;
-
-  pages: any[] = [
-    { title: 'Tabs', component: 'TabsPage' },
-    { title: 'Cards', component: 'CardsPage' },
-    { title: 'Content', component: 'ContentPage' },
-    { title: 'Login', component: 'LoginPage' },
-    { title: 'Signup', component: 'SignupPage' },
-    { title: 'Master Detail', component: 'ListMasterPage' },
-    { title: 'Menu', component: 'MenuPage' },
-    { title: 'Settings', component: 'SettingsPage' }
-  ]
-
-  constructor(platform: Platform, settings: Settings, private statusBar: StatusBar, private splashScreen: SplashScreen) {
+  
+  constructor(platform: Platform, private statusBar: StatusBar, private splashScreen: SplashScreen, private user: User) {
+    // If User is logged in, send to Main Page
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      this.user.isLoggedIn().then(() => {
+        this.rootPage = MainPage;
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+      }).catch((err) => {
+        this.rootPage = LoginPage;
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+      })
     });
-  }
-
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
   }
 }

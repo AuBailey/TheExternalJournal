@@ -1,5 +1,5 @@
-<ion-menu [content]="content">
-  <ion-content>
+<ion-menu [content]="mainContent">
+  <ion-content padding>
     <ion-list>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
         {{p.title}}
@@ -8,4 +8,4 @@
   </ion-content>
 </ion-menu>
 
-<ion-nav #content [root]="rootPage"></ion-nav>
+<ion-nav #mainContent [root]="pageRoot"></ion-nav>

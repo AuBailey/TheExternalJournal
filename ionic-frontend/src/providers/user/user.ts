@@ -1,7 +1,7 @@
-import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/share';
 
 import { Injectable } from '@angular/core';
-
+import { Storage } from '@ionic/storage';
 import { Api } from '../api/api';
 
 /**
@@ -15,7 +15,29 @@ export class User {
   _jwt: string;
   _user: any;
 
-  constructor(public api: Api) { }
+  constructor(public api: Api, private storage: Storage) { }
+
+  /**
+   * Checks if user is logged in.
+   * If true, it sets the proper data and resolves, else rejects.
+   */
+  isLoggedIn() {
+    return new Promise((resolve, reject) => {
+      if (this._jwt && this._user) {
+        resolve(true);
+      } else {
+        this.storage.get('data').then((val) => {
+          if (val) {
+            this._jwt = val.jwt;
+            this._user = val.user;
+            resolve(true);
+          } else {
+            reject(false);
+          }
+        });
+      }
+    })
+  }
 
   /**
    * Send a POST request to our login endpoint with the data
@@ -62,6 +84,7 @@ export class User {
   logout() {
     this._jwt = null;
     this._user = null;
+    this.storage.remove('data');
   }
 
   /**
@@ -70,5 +93,6 @@ export class User {
   _loggedIn(response) {
     this._jwt = response.data.jwt;
     this._user = response.data.user;
+    this.storage.set('data', response.data);
   }
 }
