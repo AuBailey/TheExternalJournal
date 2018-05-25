@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("mUsernameEditText - " + mUsernameEditText.getText().toString());
             System.out.println("mPasswordEditText - " + mPasswordEditText.getText().toString());
 
-            doLogin("https://nuproject.tech/", "test@gmail.com", "test");
+            doLogin("https://nuproject.tech/", mUsernameEditText.getText().toString(), mPasswordEditText.getText().toString());
 
             System.out.println("End of onClicked");
         });
