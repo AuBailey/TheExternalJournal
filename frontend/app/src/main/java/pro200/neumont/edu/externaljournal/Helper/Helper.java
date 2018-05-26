@@ -1,5 +1,7 @@
 package pro200.neumont.edu.externaljournal.Helper;
 
+import android.app.Activity;
+import android.widget.Toast;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pro200.neumont.edu.externaljournal.BuildConfig;
@@ -7,8 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Helper
-{
+public class Helper {
     public static Retrofit getRetrofit(String baseUrl) {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
 
@@ -23,5 +24,9 @@ public class Helper
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
+    }
+
+    public static void showToast(Activity self, String msg) {
+        Toast.makeText(self, msg, Toast.LENGTH_SHORT).show();
     }
 }
