@@ -31,6 +31,17 @@ export class Journals {
     return this.api.post('/journal', {'journalName': journal.name}, httpOptions);
   }
 
+  edit(journal: Journal) {
+    // SET HEADERS
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': "Bearer " + this.user._jwt
+      })
+    };
+    return this.api.put('/journal', {'journalId': journal.id, 'journalName': journal.name}, httpOptions);
+  }
+
   delete(journal: Journal) {
     // SET HEADERS
     const httpOptions = {

@@ -14,15 +14,19 @@
 
 <ion-content>
 
+  <div padding *ngIf="isLoading">
+      <ion-spinner circle></ion-spinner>  
+  </div>
+  
   <ion-list>
-    <ion-item-sliding *ngFor="let journal of journals$">
+    <ion-item-sliding #slidingItem *ngFor="let journal of journals$">
       <button ion-item (click)="openJournal(journal)">
         <h2>{{journal.name}}</h2>
       </button>
 
       <ion-item-options>
-        <button ion-button color="warning" (click)="editJournal(journal)"><ion-icon></ion-icon><ion-icon name="create"></ion-icon>Edit</button>
-        <button ion-button color="danger" (click)="deleteJournal(journal)"><ion-icon name="trash"></ion-icon>Delete</button>
+        <button ion-button color="warning" (click)="editJournal(journal, slidingItem)"><ion-icon></ion-icon><ion-icon name="create"></ion-icon>Edit</button>
+        <button ion-button color="danger" (click)="deleteJournal(journal, slidingItem)"><ion-icon name="trash"></ion-icon>Delete</button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>

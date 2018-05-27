@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController, AlertController } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, AlertController, ToastController, ItemSliding } from 'ionic-angular';
 
 import { Journal } from '../../models/journal';
 import { Journals } from '../../providers';
@@ -10,13 +10,25 @@ import { Journals } from '../../providers';
   templateUrl: 'journals.html'
 })
 export class JournalsPage {
+  isLoading: boolean;
   journals$: Journal[];
 
-  constructor(public navCtrl: NavController, public journals: Journals, public modalCtrl: ModalController, private alertCtrl: AlertController) {
-    this.journals.getAll().subscribe(res => this.journals$ = res['data']['journals']);
-  }
+  constructor(public navCtrl: NavController, public journals: Journals, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    this.isLoading = true;
+    this.journals.getAll().subscribe(res => {
+      this.isLoading = false;
+      this.journals$ = res['data']['journals']; 
+    }, (err) => {
+      this.isLoading = false;
 
-  ionViewDidLoad() {
+      let message = (err.error.message) ? err.error.message : "An error occured.";
+      let toast = this.toastCtrl.create({
+        message: message,
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+    });
   }
 
   /**
@@ -28,21 +40,45 @@ export class JournalsPage {
     addModal.onDidDismiss(journal => {
       if (journal) {
         this.journals.add(journal).subscribe(resp => {
-          if (resp['success']) {
-            journal.id = resp['data']['journalId'];
-            this.journals$.push(journal);
-          }
+          journal.id = resp['data']['journalId'];
+          this.journals$.push(journal);
+        }, (err) => {
+          let message = (err.error.message) ? err.error.message : "An error occured.";
+          let toast = this.toastCtrl.create({
+            message: message,
+            duration: 3000,
+            position: 'top'
+          });
+          toast.present();
         })
       }
     })
     addModal.present();
   }
 
-  editJournal(journal) {
-    console.log("edit me")
+  editJournal(journal: Journal, slidingItem: ItemSliding) {
+    let journalCopy = Object.assign({}, journal);
+    let addModal = this.modalCtrl.create('JournalCreatePage', {'journal': journalCopy});
+    addModal.onDidDismiss(journalCopy => {
+      if (journalCopy && (journalCopy.name !== journal.name)) {
+        this.journals.edit(journalCopy).subscribe(resp => {
+          this.journals$.splice(this.journals$.indexOf(journal), 1, journalCopy);
+        }, (err) => {
+          let message = (err.error.message) ? err.error.message : "An error occured.";
+          let toast = this.toastCtrl.create({
+            message: message,
+            duration: 3000,
+            position: 'top'
+          });
+          toast.present();
+        })
+      }
+      slidingItem.close();
+    })
+    addModal.present();
   }
 
-  deleteJournal(journal) {
+  deleteJournal(journal: Journal, slidingItem: ItemSliding) {
     //TODO: Prompt if sure they want to delete
     let alert = this.alertCtrl.create({
       title: 'Confirm delete Journal',
@@ -51,6 +87,7 @@ export class JournalsPage {
         {
           text: 'No',
           handler: () => {
+            slidingItem.close();
           }
         },
         {
