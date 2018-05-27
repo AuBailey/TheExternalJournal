@@ -21,6 +21,7 @@
   <ion-list>
     <ion-item-sliding #slidingItem *ngFor="let journal of journals$">
       <button ion-item (click)="openJournal(journal)">
+        <ion-spinner item-end circle *ngIf="journal.isBeingModified"></ion-spinner>
         <h2>{{journal.name}}</h2>
       </button>
 

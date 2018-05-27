@@ -61,8 +61,10 @@ export class JournalsPage {
     let addModal = this.modalCtrl.create('JournalCreatePage', {'journal': journalCopy});
     addModal.onDidDismiss(journalCopy => {
       if (journalCopy && (journalCopy.name !== journal.name)) {
+        journal.isBeingModified = true;
         this.journals.edit(journalCopy).subscribe(resp => {
           this.journals$.splice(this.journals$.indexOf(journal), 1, journalCopy);
+          journal.isBeingModified = false;
         }, (err) => {
           let message = (err.error.message) ? err.error.message : "An error occured.";
           let toast = this.toastCtrl.create({
@@ -71,6 +73,7 @@ export class JournalsPage {
             position: 'top'
           });
           toast.present();
+          journal.isBeingModified  = false;
         })
       }
       slidingItem.close();
