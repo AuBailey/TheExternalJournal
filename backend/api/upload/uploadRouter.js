@@ -1,14 +1,12 @@
 const express = require('express'),
     router = express.Router(),
     authController = require('../auth/authController'),
-    entryController = require('../entry/entryController');
+    uploadController = require('./uploadController');
 
-router.post('/', function(req, res){
-  if(req.files.image !== undefined){ // `image` is the field name from your form
-      res.redirect("/uploads"); // success
-  }else{
-      res.send("error, no file chosen");
-  }
+router.post('/', authController.loginRequired, uploadController.upload.array('images'), function(req, res) {
+    return res.json({
+        
+    })
 });
 
 // Need to export the router variable for use in api.js.
