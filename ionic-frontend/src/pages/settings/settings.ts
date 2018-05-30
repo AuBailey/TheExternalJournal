@@ -5,6 +5,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Settings } from '../../providers';
 import { User } from '../../providers'
 
+
 /**
  * The Settings page is a simple form that syncs with a Settings provider
  * to enable the user to customize settings for the app.
@@ -26,5 +27,9 @@ export class SettingsPage {
   logout() {
     this.user.logout();
     this.navCtrl.setRoot('LoginPage');
+  }
+
+  changePassword(){
+    this.navCtrl.push('ChangePassword');
   }
 }
