@@ -14,4 +14,4 @@ import { JournalsPage } from './journals';
     JournalsPage
   ]
 })
-export class ListMasterPageModule { }
+export class JournalsPageModule { }

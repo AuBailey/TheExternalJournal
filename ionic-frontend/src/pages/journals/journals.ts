@@ -113,7 +113,7 @@ export class JournalsPage {
    */
   openJournal(journal: Journal) {
     this.navCtrl.push('EntriesPage', {
-      journal: journal
+      journalId: journal.id
     });
   }
 }

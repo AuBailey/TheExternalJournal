@@ -14,4 +14,4 @@ import { EntriesPage } from './entries';
     EntriesPage
   ]
 })
-export class ListMasterPageModule { }
+export class EntriesPageModule { }

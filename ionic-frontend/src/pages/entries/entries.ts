@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController, AlertController, ToastController, ItemSliding } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, NavParams, AlertController, ToastController, ItemSliding } from 'ionic-angular';
 
 import { Entry } from '../../models/entry';
 import { Entries } from '../../providers';
@@ -13,22 +13,27 @@ export class EntriesPage {
   isLoading: boolean;
   entries$: Entry[];
 
-  constructor(public navCtrl: NavController, public entries: Entries, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
-    this.isLoading = true;
-    this.entries.getAll().subscribe(res => {
-      this.isLoading = false;
-      this.entries$ = res['data']['entries']; 
-    }, (err) => {
-      this.isLoading = false;
+  constructor(public navCtrl: NavController, public params: NavParams, public entries: Entries, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    if (params.get('journalId')) {
+      this.isLoading = true;
+      this.entries.getAll(params.get('journalId')).subscribe(res => {
+        this.isLoading = false;
+        this.entries$ = res['data']['entries']; 
+      }, (err) => {
+        this.isLoading = false;
 
-      let message = (err.error.message) ? err.error.message : "An error occured.";
-      let toast = this.toastCtrl.create({
-        message: message,
-        duration: 3000,
-        position: 'top'
+        let message = (err.error.message) ? err.error.message : "An error occured.";
+        let toast = this.toastCtrl.create({
+          message: message,
+          duration: 3000,
+          position: 'top'
+        });
+        toast.present();
       });
-      toast.present();
-    });
+    } else {
+      this.navCtrl.push('JournalsPage');
+    }
+    
   }
 
   /**
