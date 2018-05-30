@@ -1,6 +1,6 @@
 const aws = require('aws-sdk'),
-multer = require('multer'),
-multerS3 = require('multer-s3');
+    multer = require('multer'),
+    multerS3 = require('multer-s3');
 
 aws.config.update({
     'accessKeyId': process.env.awsAccessKey,
@@ -34,14 +34,33 @@ const s3 = new aws.S3();
 // }));
 
 exports.upload = multer({
-  storage: multerS3({
-      s3: s3,
-      bucket: process.env.awsUploadBucket,
-      metadata: function (req, file, cb) {
-          cb(null, { fieldName: file.fieldname });
-      },
-      key: function (req, file, cb) {
-          cb(null, Date.now().toString())
-      }
-  })
+    storage: multerS3({
+        s3: s3,
+        bucket: process.env.awsUploadBucket,
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        metadata: function (req, file, cb) {
+            cb(null, { fieldName: file.fieldname });
+        },
+        key: function (req, file, cb) {
+            cb(null, "entry-" + req.params.entryId + "/" + Date.now().toString() + getExtension(file.originalname))
+        }
+    }),
+    onError: function(err, next) {
+        
+    }
 });
+
+exports.getObjects = function (req, res) {
+    var params = { Bucket: process.env.awsUploadBucket };
+    s3.getObject(params, function (err, data) {
+        if (err) {
+            return res.send({ "error": err });
+        }
+        res.send({ data });
+    });
+}
+
+function getExtension(filename) {
+    var i = filename.lastIndexOf('.');
+    return (i < 0) ? '' : filename.substr(i);
+}

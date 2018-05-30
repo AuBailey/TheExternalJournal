@@ -197,3 +197,14 @@ exports.deleteEntry = function (req, res) {
     });
   })
 }
+
+exports.requireEntryBelongsToUser = function(req, res, next) {
+  entryModel.requireEntryBelongsToUser(req.user.id, req.params.entryId).then(function() {
+    next();
+  }).catch((error) => {
+    return res.status(401).json({
+      'success': false,
+      'message': "User does not have permissions to upload to entry with id: " + req.body.entryId
+    });
+  })
+}
