@@ -7,7 +7,6 @@
 <ion-content>
   <form [formGroup]="signupForm" (submit)="doSignup()">
     <ion-list>
-
       <ion-item>
         <ion-label floating>Username</ion-label>
         <ion-input type="text" [(ngModel)]="account.username" formControlName="username"></ion-input>
