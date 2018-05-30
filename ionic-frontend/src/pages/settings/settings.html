@@ -1,47 +1,108 @@
-<ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Settings</ion-title>
-  </ion-navbar>
-</ion-header>
-
-<ion-content>
-  <!-- <form [formGroup]="form" *ngIf="settingsReady">
-    <ion-list *ngIf="page == 'main'">
-      <ion-item>
-        <ion-label>SETTINGS_OPTION1</ion-label>
-        <ion-toggle formControlName="option1"></ion-toggle>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>SETTINGS_OPTION2</ion-label>
-        <ion-input formControlName="option2"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>SETTINGS_OPTION3' | translate</ion-label>
-        <ion-select formControlName="option3">
-          <ion-option value="1" checked="true">1</ion-option>
-          <ion-option value="2">2</ion-option>
-          <ion-option value="3">3</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <button ion-item [navPush]="subSettings" [navParams]="profileSettings">
-        SETTINGS_PROFILE_BUTTON
-      </button>
-    </ion-list>
-
-    <ion-list *ngIf="page == 'profile'">
-      <ion-item>
-        <ion-label>SETTINGS_OPTION4</ion-label>
-        <ion-input formControlName="option4"></ion-input>
-      </ion-item>
-    </ion-list>
-  </form> -->
-
-  <button ion-button block (click)="logout()">Logout</button>
-
+<!-- <ion-header> 
+<ion-header> 
+  <ion-navbar> 
+    <button ion-button menuToggle> 
+      <ion-icon name="menu"></ion-icon> 
+@@ -41,102 +41,7 @@
+      </ion-item> 
+    </ion-list> 
+  </form> --> 
+  <!-- <ion-item> 
+    <ion-label>User Location</ion-label> 
+    <ion-toggle></ion-toggle> 
+  </ion-item> 
+   
+  <button ion-button block (click)="changePassword">Change Password</button> 
+ 
+  <button ion-button block (click)="logout()">Logout</button> 
+</ion-content> --> --> 
+ 
+<ion-header> 
+ 
+  <ion-navbar> 
+    <ion-title>List</ion-title> 
+  </ion-navbar> 
+ 
+</ion-header> 
+ 
+ 
+<ion-content class="outer-content"> 
+ 
+  <ion-list> 
+    <ion-list-header> 
+      Settings 
+    </ion-list-header> 
+ 
+    <ion-item> 
+      <ion-icon name="plane" item-start color="danger"></ion-icon> 
+      <ion-label>Airplane Mode</ion-label> 
+      <ion-toggle color="secondary"></ion-toggle> 
+    </ion-item> 
+ 
+    <button ion-item> 
+      <ion-icon name="wifi" item-start color="primary"></ion-icon> 
+      <ion-label>Wi-Fi</ion-label> 
+      <ion-note item-end>The Interwebz</ion-note> 
+    </button> 
+ 
+    <button ion-item> 
+      <ion-icon name="bluetooth" item-start color="primary"></ion-icon> 
+      <ion-label>Bluetooth</ion-label> 
+      <ion-note item-end>Off</ion-note> 
+    </button> 
+ 
+    <button ion-item> 
+      <ion-icon name="call" item-start color="secondary"></ion-icon> 
+      <ion-label>Cellular</ion-label> 
+    </button> 
+ 
+    <button ion-item> 
+      <ion-icon name="link" item-start color="secondary"></ion-icon> 
+      <ion-label>Personal Hotspot</ion-label> 
+      <ion-note item-end>Off</ion-note> 
+    </button> 
+  </ion-list> 
+ 
+  <ion-list radio-group> 
+    <ion-list-header> 
+      Silence Phone 
+    </ion-list-header> 
+ 
+    <ion-item> 
+      <ion-label color="dark">Always</ion-label> 
+      <ion-radio value="always" checked></ion-radio> 
+    </ion-item> 
+    <ion-item> 
+      <ion-label color="dark">Only while phone is locked</ion-label> 
+      <ion-radio value="locked"></ion-radio> 
+    </ion-item> 
+  </ion-list> 
+ 
+  <ion-list> 
+    <ion-list-header> 
+      Apps Installed 
+    </ion-list-header> 
+ 
+    <ion-item> 
+      <ion-icon name="ionic" item-start color="primary"></ion-icon> 
+      <ion-label>Ionic View</ion-label> 
+      <button ion-button outline item-end>Uninstall</button> 
+    </ion-item> 
+    <ion-item> 
+      <ion-icon name="brush" item-start color="primary"></ion-icon>
+      <ion-label>Ionic Creator</ion-label> 
+      <button ion-button outline item-end>Uninstall</button> 
+    </ion-item> 
+    <ion-item> 
+      <ion-icon name="logo-octocat" item-start color="dark"></ion-icon> 
+      <ion-label>Hubstruck</ion-label> 
+      <button ion-button outline item-end>Uninstall</button> 
+    </ion-item> 
+    <ion-item> 
+      <ion-icon name="paw" item-start color="danger"></ion-icon> 
+      <ion-label>Barkpark</ion-label> 
+      <button ion-button outline item-end>Uninstall</button> 
+    </ion-item> 
+  </ion-list> 
+ 
 </ion-content>
