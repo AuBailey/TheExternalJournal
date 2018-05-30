@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Camera } from '@ionic-native/camera';
-import { IonicPage, NavController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
 import { Journal } from '../../models/journal'
 
@@ -14,12 +13,20 @@ export class JournalCreatePage {
   @ViewChild('fileInput') fileInput;
 
   isReadyToSave: boolean;
-
-  jounal: Journal;
+  title: string;
+  journal: Journal;
 
   form: FormGroup;
 
-  constructor(public navCtrl: NavController, public viewCtrl: ViewController, formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController, formBuilder: FormBuilder) {
+    if (params.get('journal')) {
+      this.title = "Edit Journal";
+      this.journal = params.get('journal')
+    } else {
+      this.title = "Create New Journal"
+      this.journal = new Journal(null, "");
+    }
+    
     this.form = formBuilder.group({
       name: ['', Validators.required]
     });
@@ -43,6 +50,6 @@ export class JournalCreatePage {
    */
   done() {
     if (!this.form.valid) { return; }
-    this.viewCtrl.dismiss(this.form.value);
+    this.viewCtrl.dismiss(this.journal);
   }
 }

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Create New Journal</ion-title>
+    <ion-title>{{ title }}</ion-title>
     <ion-buttons start>
       <button ion-button (click)="cancel()">
         <span color="primary" showWhen="ios">Cancel</span>
@@ -22,7 +22,7 @@
     <ion-list>
       <ion-item>
         <ion-label floating>Journal Name</ion-label>
-        <ion-input type="text" formControlName="name"></ion-input>
+        <ion-input type="text" [(ngModel)]="journal.name" formControlName="name"></ion-input>
       </ion-item>
     </ion-list>
   </form>
