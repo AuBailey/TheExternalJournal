@@ -10,10 +10,21 @@ router.get('/all/:journalId(\\d+)', authController.loginRequired, entryControlle
 
 router.post('/', authController.loginRequired, entryController.createEntry);
 
-router.post('/:entryId(\\d+)/upload', authController.loginRequired, entryController.requireEntryBelongsToUser, uploadController.upload.array('files'), function(req, res) {
-    return res.json({
-        success: true
-    })
+router.post('/:entryId(\\d+)/upload', authController.loginRequired, entryController.requireEntryBelongsToUser, function(req, res) {
+    uploadController.uploadArray(req, res, function(error) {
+        if (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Error Uploading File(s)"
+            })
+        }
+
+        return res.json({
+            success: true
+        })
+    });
+    
+    
 });
 
 router.put('/', authController.loginRequired, entryController.updateEntry);

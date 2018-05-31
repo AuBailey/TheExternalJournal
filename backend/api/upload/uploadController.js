@@ -9,8 +9,8 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-// app.use(multer({ // https://github.com/expressjs/multer
-//   dest: './public/uploads/', 
+// exports.upload = multer({
+//   dest: '/tmp', 
 //   limits : { fileSize:100000 },
 //   rename: function (fieldname, filename) {
 //     return filename.replace(/\W+/g, '-').toLowerCase();
@@ -18,7 +18,7 @@ const s3 = new aws.S3();
 //   onFileUploadData: function (file, data, req, res) {
 //     // file : { fieldname, originalname, name, encoding, mimetype, path, extension, size, truncated, buffer }
 //     var params = {
-//       Bucket: 'makersquest',
+//       Bucket: process.env.awsUploadBucket,
 //       Key: file.name,
 //       Body: data
 //     };
@@ -31,34 +31,25 @@ const s3 = new aws.S3();
 //       }
 //     });
 //   }
-// }));
+// });
 
-exports.upload = multer({
+let upload = multer({
     storage: multerS3({
         s3: s3,
         bucket: process.env.awsUploadBucket,
-        contentType: multerS3.AUTO_CONTENT_TYPE,
-        metadata: function (req, file, cb) {
-            cb(null, { fieldName: file.fieldname });
+        acl: 'public-read',
+        contentType: function(req, file, cb) {
+            cb(null, file.mimetype);
         },
         key: function (req, file, cb) {
-            cb(null, "entry-" + req.params.entryId + "/" + Date.now().toString() + getExtension(file.originalname))
+            let filepath = "entry-" + req.params.entryId + "/";
+            let filename = Date.now().toString() + getExtension(file.originalname);
+            cb(null,  filepath + filename);
         }
-    }),
-    onError: function(err, next) {
-        
-    }
+    })
 });
 
-exports.getObjects = function (req, res) {
-    var params = { Bucket: process.env.awsUploadBucket };
-    s3.getObject(params, function (err, data) {
-        if (err) {
-            return res.send({ "error": err });
-        }
-        res.send({ data });
-    });
-}
+exports.uploadArray = upload.array('files');
 
 function getExtension(filename) {
     var i = filename.lastIndexOf('.');
