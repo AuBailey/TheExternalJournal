@@ -7,7 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from '@ionic/storage';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
-import { Api, Settings, User, Journals } from '../providers';
+import { Api, Settings, User, Journals, Entries } from '../providers';
 import { MyApp } from './app.component';
 
 @NgModule({
@@ -28,6 +28,7 @@ import { MyApp } from './app.component';
     Api,
     User,
     Journals,
+    Entries,
     Camera,
     SplashScreen,
     StatusBar,

@@ -85,7 +85,7 @@ export class JournalsPage {
     //TODO: Prompt if sure they want to delete
     let alert = this.alertCtrl.create({
       title: 'Confirm delete Journal',
-      message: 'Are you sure you want to permanently delete this Journal and all it\'s Entries?',
+      message: 'Are you sure you want to permanently delete this Journal and all of it\'s Entries?',
       buttons: [
         {
           text: 'No',
@@ -113,7 +113,7 @@ export class JournalsPage {
    */
   openJournal(journal: Journal) {
     this.navCtrl.push('EntriesPage', {
-      journal: journal
+      journalId: journal.id
     });
   }
 }
