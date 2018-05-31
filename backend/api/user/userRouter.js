@@ -9,7 +9,7 @@ router.get('/:userId(\\d+)', authController.roleRequired('admin'), userControlle
 
 router.get('/all', authController.roleRequired('admin'), userController.getAllUsers);
 
-router.put('/', authController.loginRequired, userController.updateUsername);
+router.put('/', authController.loginRequired, userController.updateUser);
 
 router.delete('/', authController.loginRequired, userController.deleteLoggedInUser);
 

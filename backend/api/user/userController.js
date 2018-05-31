@@ -77,15 +77,27 @@ exports.getAllUsers = function (req, res) {
  * @param {*} req 
  * @param {*} res 
  */
-exports.updateUsername = function (req, res) {
-    if (!req.body.username) {
+exports.updateUser = function (req, res) {
+    // useLocation is a boolean, so check if undefined, not falsy values
+    if (!req.body.username && !(req.body.useLocation == 1 || req.body.useLocation == 0) ) {
         return res.status(400).json({
             'success': false,
-            'message': 'Valid username required.'
+            'message': 'Valid username or useLocation required.'
         });
     }
-    
-    userModel.updateUser(req.user.id, ['username'], [req.body.username]).then(function (changedRows) {
+
+    let columns = [];
+    let data = [];
+    if (req.body.username) {
+        columns.push('username');
+        data.push(req.body.username);
+    }
+    if (req.body.useLocation != undefined) {
+        columns.push('useLocation');
+        data.push(req.body.useLocation);
+    }
+
+    userModel.updateUser(req.user.id, columns, data).then(function (changedRows) {
         return res.json({
             'success': true,
             'data': {

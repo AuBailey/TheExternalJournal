@@ -18,15 +18,17 @@ Requires user performing request to have admin role
 
 ### GET `/api/user/all`
 
-## Update User's Username
+## Update User
 
 ### PUT `/api/user/`
 
 ### BODY
 
+NOTE: at least one of the following items must be passed in.
 Key | Description | Required
 --- | --- | ---
-username | username to update to | *
+username | username to update to |
+useLocation | whether or not user wants location stored on Entry (Must be either 0 or 1) |
 
 ## Delete Current User
 
