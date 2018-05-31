@@ -1,16 +1,17 @@
 import { Component } from '@angular/core'; 
 import { IonicPage, NavController, ToastController } from 'ionic-angular'; 
- 
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { PasswordMatchValidation } from '../../validators';
 import { User } from '../../providers'; 
  
 @IonicPage() 
 @Component({ 
   selector: 'page-changepassword', 
-  templateUrl: 'changepassword.html' 
+  templateUrl: 'change-password.html' 
 }) 
 export class ChangePasswordPage { 
-    account: { oldPassword: string, newPassword: string, confrimPassword: string } = { oldPassword: '',newPassword: '' ,confrimPassword: ''}; 
-    loginForm: FormGroup; 
+    account: { oldPassword: string, password: string, passwordConfirm: string } = { oldPassword: '',password: '' ,passwordConfirm: ''}; 
+    changePasswordForm: FormGroup; 
     isLoading: boolean = false; 
    
     constructor(public navCtrl: NavController, 
@@ -18,9 +19,38 @@ export class ChangePasswordPage {
       public user: User, 
       public toastCtrl: ToastController) { 
    
-      this.loginForm = formBuilder.group({ 
-        email: ['', Validators.compose([Validators.email, Validators.required])], 
-        password: ['', Validators.required] 
+      this.changePasswordForm = formBuilder.group({ 
+        oldPassword: ['', Validators.required],
+        password: ['', Validators.required],
+        passwordConfirm: ['', Validators.required]
+      }, {
+        validator: PasswordMatchValidation.MatchPassword
       }) 
- 
+    }
+
+    changePassword(){
+      if (this.changePasswordForm.valid) {
+        this.isLoading = true;
+        this.user.changePassword(this.account).subscribe((resp) => {
+          this.isLoading = false;
+          let message = "Password Successfully Changed!";
+          let toast = this.toastCtrl.create({
+            message: message,
+            duration: 3000,
+            position: 'top'
+          });
+          toast.present();
+          this.navCtrl.push('SettingsPage');
+        }, (err) => {
+          this.isLoading = false;
+          let message = (err.error.message) ? err.error.message : "An error occured.";
+          let toast = this.toastCtrl.create({
+            message: message,
+            duration: 3000,
+            position: 'top'
+          });
+          toast.present();
+        });
+      }
+    }
 }
