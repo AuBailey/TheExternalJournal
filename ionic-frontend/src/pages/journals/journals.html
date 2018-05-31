@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Journals</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addJournal()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <div padding *ngIf="isLoading">
+      <ion-spinner circle></ion-spinner>  
+  </div>
+  
+  <ion-list>
+    <ion-item-sliding #slidingItem *ngFor="let journal of journals$">
+      <button ion-item (click)="openJournal(journal)">
+        <ion-spinner item-end circle *ngIf="journal.isBeingModified"></ion-spinner>
+        <h2>{{journal.name}}</h2>
+      </button>
+
+      <ion-item-options>
+        <button ion-button color="warning" (click)="editJournal(journal, slidingItem)"><ion-icon></ion-icon><ion-icon name="create"></ion-icon>Edit</button>
+        <button ion-button color="danger" (click)="deleteJournal(journal, slidingItem)"><ion-icon name="trash"></ion-icon>Delete</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Sign Up</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="signupForm" (submit)="doSignup()">
+    <ion-list>
+      <ion-item>
+        <ion-label floating>Username</ion-label>
+        <ion-input type="text" [(ngModel)]="account.username" formControlName="username"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Email</ion-label>
+        <ion-input type="email" [(ngModel)]="account.email" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Password</ion-label>
+        <ion-input type="password" [(ngModel)]="account.password" formControlName="password"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Password Confirm</ion-label>
+        <ion-input type="password" [(ngModel)]="account.passwordConfirm" formControlName="passwordConfirm"></ion-input>
+      </ion-item>
+
+      <div padding>
+        <button ion-button color="primary" block *ngIf="!isLoading">Sign Up</button>
+        <ion-spinner circle block *ngIf="isLoading"></ion-spinner>
+      </div>
+      
+
+    </ion-list>
+  </form>
+</ion-content>
