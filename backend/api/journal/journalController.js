@@ -44,6 +44,7 @@ exports.getUsersJournals = function (req, res) {
       }
     });
   }).catch((error) => {
+    console.error(error);
     return res.status(400).json({
       'success': false,
       'message': "Unable to retrieve the user's journals."
