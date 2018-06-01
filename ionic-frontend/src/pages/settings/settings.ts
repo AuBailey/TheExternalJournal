@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, NavParams } from 'ionic-angular';
 
 import { Settings } from '../../providers';
 import { User } from '../../providers'
@@ -16,15 +15,53 @@ import { User } from '../../providers'
   templateUrl: 'settings.html'
 })
 export class SettingsPage {
+  useLocation: boolean;
+
   constructor(public navCtrl: NavController,
     public settings: Settings,
-    public formBuilder: FormBuilder,
     public navParams: NavParams,
+    private alertCtrl: AlertController,
     private user: User) {
+      this.useLocation = !!user._user.useLocation;
+  }
+
+  changeUseLocation(){
+    if (this.useLocation) {
+        this.user.changeUseLocation(1);
+    } else{
+      this.user.changeUseLocation(0);
+    }
+  }
+
+  changePassword() {
+    this.navCtrl.push('ChangePasswordPage');
   }
 
   logout() {
     this.user.logout();
     this.navCtrl.setRoot('LoginPage');
+  }
+
+  deleteUser(){
+    let alert = this.alertCtrl.create({
+      title: 'Confirm delete User',
+      message: 'Are you sure you want to permanently delete this User and all it\'s Data?',
+      buttons: [
+        {
+          text: 'No',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.user.delete();
+            this.navCtrl.setRoot('LoginPage');
+          }
+        }
+      ]
+    });
+    alert.present();
+    
   }
 }

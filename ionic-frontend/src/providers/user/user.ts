@@ -1,4 +1,5 @@
 import 'rxjs/add/operator/share';
+import { HttpHeaders } from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
@@ -86,6 +87,79 @@ export class User {
     this._user = null;
     this.storage.remove('data');
   }
+
+  changeUseLocation(useLocation: number){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': "Bearer " + this._jwt
+      })
+    };
+    let seq = this.api.put('/user',{ 'useLocation': useLocation} ,httpOptions);
+
+    seq.subscribe((res: any) => {
+      this._user.useLocation = useLocation;
+      let dataObject = {
+        jwt: this._jwt,
+        user: this._user
+      }
+      this.storage.set('data',dataObject);
+    }, err => {
+      console.error('ERROR', err);
+    });
+    return seq;
+  }
+
+  /**
+   * Deletes the user , and calls logout. 
+   */
+  delete(){
+    // SET HEADERS
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': "Bearer " + this._jwt
+      })
+    };
+    let seq = this.api.delete('/user', httpOptions);
+
+    seq.subscribe((res: any) => {
+      if (res.success) {
+        this.logout();
+      } else {
+      }
+    }, err => {
+      console.error('ERROR', err);
+    });
+    return seq;
+  }
+
+  /**
+   * Changes the user password
+   */
+  changePassword(accountInfo: any){
+    // SET HEADERS
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': "Bearer " + this._jwt
+      })
+    };
+
+    let passwordInfo = {
+      currentPassword: accountInfo.oldPassword,
+      newPassword : accountInfo.password
+    }
+    let seq = this.api.post('/auth/changePassword', passwordInfo, httpOptions).share();
+
+    seq.subscribe((res: any) => {
+    }, err => {
+      console.error('ERROR', err);
+    });
+
+    return seq;
+  }
+
 
   /**
    * Process a login/signup response to store user data
