@@ -88,6 +88,28 @@ export class User {
     this.storage.remove('data');
   }
 
+  changeUseLocation(useLocation: number){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': "Bearer " + this._jwt
+      })
+    };
+    let seq = this.api.put('/user',{ 'useLocation': useLocation} ,httpOptions);
+
+    seq.subscribe((res: any) => {
+      this._user.useLocation = useLocation;
+      let dataObject = {
+        jwt: this._jwt,
+        user: this._user
+      }
+      this.storage.set('data',dataObject);
+    }, err => {
+      console.error('ERROR', err);
+    });
+    return seq;
+  }
+
   /**
    * Deletes the user , and calls logout. 
    */
