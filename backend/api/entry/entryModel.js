@@ -49,7 +49,7 @@ exports.getJournalEntries = function (journalId) {
  * @param {string} content 
  * @param {float} [lat] 
  * @param {float} [lng]
- * @param {string} [city] 
+ * @param {string} [city]
  */
 exports.saveEntry = function (journalId, name, content, lat, lng, city) {
   return new Promise((resolve, reject) => {

@@ -2,6 +2,41 @@
 
 const entryModel = require('./entryModel');
 
+exports.getSharedEntry = function (req, res) {
+  entryModel.getEntryById(req.params.entryId).then(function (entry) {
+    return res.send(entry.content);
+  }).catch((error) => {
+    return res.status(400).json({
+      'success': false,
+      'message': "Unable to retrieve Entry with id: " + req.params.entryId
+    });
+  })
+}
+
+exports.sharedRequired = function (req, res, next) {
+  if (!req.params.entryId) {
+    return res.status(400).json({
+      'success': false,
+      'message': 'Valid entryId required.'
+    });
+  }
+  entryModel.getEntryById(req.params.entryId).then((entry) => {
+    if (entry.isShared) {
+      next();
+    } else {
+      return res.status(401).json({
+        'success': false,
+        'message': 'Unauthorized Access!'
+      });
+    }
+  }).catch((error) => {
+    return res.status(500).json({
+      'success': false,
+      'message': 'Unable to retrieve entry!'
+    });
+  })
+};
+
 /**
  * Get Entry by Id
  * @param {*} req 
@@ -118,17 +153,29 @@ exports.createEntry = function (req, res) {
  * @param {*} res 
  */
 exports.updateEntry = function (req, res) {
-  if (!(req.body.entryId && req.body.entryName && req.body.entryContent)) {
+  if (!req.body.entryId ||!(req.body.entryName || req.body.entryContent || req.body.isShared)) {
     return res.status(400).json({
       'success': false,
-      'message': 'Valid entryId, entryName, and entryContent required.'
+      'message': 'Valid entryId and at least one of the following are required: entryName, entryContent, isShared.'
     });
   }
 
   entryModel.requireEntryBelongsToUser(req.user.id, req.body.entryId).then(function () {
-    let columns = ['name', 'content'];
-    let data = [req.body.entryName, req.body.entryContent];
+    let columns = [];
+    let data = [];
 
+    if (req.body.entryName) {
+      columns.push('name');
+      data.push(req.body.entryName);
+    }
+    if (req.body.entryContent) {
+      columns.push('content');
+      data.push(req.body.entryContent);
+    }
+    if (req.body.isShared) {
+      columns.push('isShared');
+      data.push(req.body.isShared);
+    }
     if (req.body.entryLat) {
       columns.push('lat');
       data.push(req.body.entryLat);
