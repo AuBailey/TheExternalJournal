@@ -25,8 +25,13 @@
     </ion-list-header>
  
     <button ion-item (click)="changePassword()">Change Password</button> 
-    <button ion-item (click)="logout()">Logout</button>
-    <button ion-item color="danger" (click)="deleteUser()">Delete User</button> 
+    <button ion-item color="danger" (click)="deleteUser()">Delete Account</button> 
+  </ion-list>
+  <ion-list>
+    <ion-list-header>
+      Log Out
+    </ion-list-header>
+    <button ion-item (click)="logout()">Log Out</button>
   </ion-list>
  
 </ion-content>
