@@ -51,7 +51,7 @@ export class EntryCreatePage {
     } else if (params.get('journalId')) {
       this.journalId = params.get('journalId');
       this.title = "Create New Entry"
-      this.entry = new Entry(null, "");
+      this.entry = new Entry(null, "", "");
     } else {
       let message = "An error occured.";
       let toast = this.toastCtrl.create({

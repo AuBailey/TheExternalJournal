@@ -1,0 +1,11 @@
+page-entry-view {
+  #map {
+    height: 200px;
+  }
+
+  .isShared {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
