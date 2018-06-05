@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { NgxEditorModule } from 'ngx-editor';
 
 import { SettingsPage } from './settings';
 
@@ -9,7 +8,6 @@ import { SettingsPage } from './settings';
     SettingsPage,
   ],
   imports: [
-    NgxEditorModule,
     IonicPageModule.forChild(SettingsPage)
   ],
   exports: [

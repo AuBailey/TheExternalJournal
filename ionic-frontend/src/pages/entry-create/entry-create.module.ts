@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
+import { NgxEditorModule } from 'ngx-editor';
 
 import { EntryCreatePage } from './entry-create';
 
@@ -8,6 +9,7 @@ import { EntryCreatePage } from './entry-create';
     EntryCreatePage,
   ],
   imports: [
+    NgxEditorModule,
     IonicPageModule.forChild(EntryCreatePage)
   ],
   exports: [

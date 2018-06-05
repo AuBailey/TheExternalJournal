@@ -17,7 +17,7 @@ export class JournalsPage {
     this.isLoading = true;
     this.journals.getAll().subscribe(res => {
       this.isLoading = false;
-      this.journals$ = res['data']['journals']; 
+      this.journals$ = res['data']['journals'];
     }, (err) => {
       this.isLoading = false;
 
@@ -58,7 +58,7 @@ export class JournalsPage {
 
   editJournal(journal: Journal, slidingItem: ItemSliding) {
     let journalCopy = Object.assign({}, journal);
-    let addModal = this.modalCtrl.create('JournalCreatePage', {'journal': journalCopy});
+    let addModal = this.modalCtrl.create('JournalCreatePage', { 'journal': journalCopy });
     addModal.onDidDismiss(journalCopy => {
       if (journalCopy && (journalCopy.name !== journal.name)) {
         journal.isBeingModified = true;
@@ -73,7 +73,7 @@ export class JournalsPage {
             position: 'top'
           });
           toast.present();
-          journal.isBeingModified  = false;
+          journal.isBeingModified = false;
         })
       }
       slidingItem.close();
@@ -97,9 +97,15 @@ export class JournalsPage {
           text: 'Yes',
           handler: () => {
             this.journals.delete(journal).subscribe(resp => {
-              if (resp['success']) {
-                this.journals$.splice(this.journals$.indexOf(journal), 1);
-              }
+              this.journals$.splice(this.journals$.indexOf(journal), 1);
+            }, err => {
+              let message = (err.error.message) ? err.error.message : "An error occured.";
+              let toast = this.toastCtrl.create({
+                message: message,
+                duration: 3000,
+                position: 'top'
+              });
+              toast.present();
             });
           }
         }

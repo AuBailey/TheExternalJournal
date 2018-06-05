@@ -24,6 +24,9 @@
           <ion-label floating>Entry Name</ion-label>
           <ion-input type="text" [(ngModel)]="entry.name" formControlName="name"></ion-input>
         </ion-item>
+        <ion-item>
+          <app-ngx-editor [config]="editorConfig" [(ngModel)]="entry.content" formControlName="content"></app-ngx-editor>
+        </ion-item>
       </ion-list>
     </form>
   </ion-content>

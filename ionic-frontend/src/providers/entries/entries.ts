@@ -20,7 +20,7 @@ export class Entries {
     return this.api.get('/entry/all/' + journalId, {}, httpOptions);
   }
 
-  add(entry: Entry) {
+  add(journalId:number, entry: Entry) {
     // SET HEADERS
     const httpOptions = {
       headers: new HttpHeaders({
@@ -28,7 +28,14 @@ export class Entries {
         'Authorization': "Bearer " + this.user._jwt
       })
     };
-    return this.api.post('/entry', {'entryName': entry.name}, httpOptions);
+    let body = {
+      'journalId': journalId,
+      'entryName': entry.name,
+      'entryContent': entry.content,
+      'entryLat': entry.lat,
+      'entryLong': entry.lng
+    }
+    return this.api.post('/entry', body, httpOptions);
   }
 
   edit(entry: Entry) {
@@ -39,7 +46,14 @@ export class Entries {
         'Authorization': "Bearer " + this.user._jwt
       })
     };
-    return this.api.put('/entry', {'entryName': entry.name}, httpOptions);
+    let body = {
+      'entryId': entry.id,
+      'entryName': entry.name,
+      'entryContent': entry.content,
+      'entryLat': entry.lat,
+      'entryLong': entry.lng
+    }
+    return this.api.put('/entry', body, httpOptions);
   }
 
   delete(entry: Entry) {

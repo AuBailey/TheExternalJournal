@@ -10,13 +10,15 @@ import { Entries } from '../../providers';
   templateUrl: 'entries.html'
 })
 export class EntriesPage {
+  journalId: number;
   isLoading: boolean;
   entries$: Entry[];
 
   constructor(public navCtrl: NavController, public params: NavParams, public entries: Entries, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
     if (params.get('journalId')) {
       this.isLoading = true;
-      this.entries.getAll(params.get('journalId')).subscribe(res => {
+      this.journalId = params.get('journalId');
+      this.entries.getAll(this.journalId).subscribe(res => {
         this.isLoading = false;
         this.entries$ = res['data']['entries']; 
       }, (err) => {
@@ -41,21 +43,10 @@ export class EntriesPage {
    * modal and then adds the new entry to our data source if the user created one.
    */
   addEntry() {
-    let addModal = this.modalCtrl.create('EntryCreatePage');
+    let addModal = this.modalCtrl.create('EntryCreatePage', {'journalId': this.journalId});
     addModal.onDidDismiss(entry => {
       if (entry) {
-        this.entries.add(entry).subscribe(resp => {
-          entry.id = resp['data']['entryId'];
-          this.entries$.push(entry);
-        }, (err) => {
-          let message = (err.error.message) ? err.error.message : "An error occured.";
-          let toast = this.toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'top'
-          });
-          toast.present();
-        })
+        this.entries$.push(entry);
       }
     })
     addModal.present();
@@ -65,21 +56,8 @@ export class EntriesPage {
     let entryCopy = Object.assign({}, entry);
     let addModal = this.modalCtrl.create('EntryCreatePage', {'entry': entryCopy});
     addModal.onDidDismiss(entryCopy => {
-      if (entryCopy && (entryCopy.name !== entry.name)) {
-        entry.isBeingModified = true;
-        this.entries.edit(entryCopy).subscribe(resp => {
-          this.entries$.splice(this.entries$.indexOf(entry), 1, entryCopy);
-          entry.isBeingModified = false;
-        }, (err) => {
-          let message = (err.error.message) ? err.error.message : "An error occured.";
-          let toast = this.toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'top'
-          });
-          toast.present();
-          entry.isBeingModified  = false;
-        })
+      if (entryCopy) {
+        this.entries$.splice(this.entries$.indexOf(entry), 1, entryCopy);
       }
       slidingItem.close();
     })

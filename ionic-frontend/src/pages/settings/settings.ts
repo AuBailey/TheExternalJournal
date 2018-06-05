@@ -16,24 +16,6 @@ import { User } from '../../providers'
 })
 export class SettingsPage {
   useLocation: boolean;
-  editorConfig: any = {
-    "editable": true,
-    "spellcheck": true,
-    "height": "auto",
-    "minHeight": "200px",
-    "width": "auto",
-    "minWidth": "0",
-    "translate": "yes",
-    "enableToolbar": true,
-    "showToolbar": true,
-    "placeholder": "Enter text here...",
-    "imageEndPoint": "",
-    "toolbar": [
-        ["bold", "italic", "underline"],
-        ["fontName", "fontSize", "color"],
-        ["link", "unlink", "image", "video"]
-    ]
-}
 
   constructor(public navCtrl: NavController,
     public settings: Settings,
