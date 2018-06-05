@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">ExternalJournal</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="email">Email</string>
-    <string name="register">Register</string>
-    <string name="passwordConfirmation">Confirm Password</string>
-</resources>
