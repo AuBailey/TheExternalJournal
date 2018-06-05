@@ -8,6 +8,12 @@ Only gets the Entry if belongs to logged in User
 
 ### Get `/api/entry/:entryId`
 
+## Get Shared Entry
+
+Returns the Entry as Html if it is shared
+
+### Get `/api/entry/shared/:entryId`
+
 ## Get Entries in a user's journal
 
 Gets all the Entries in specified Journal belonging to logged in User

@@ -2,41 +2,6 @@
 
 const entryModel = require('./entryModel');
 
-exports.getSharedEntry = function (req, res) {
-  entryModel.getEntryById(req.params.entryId).then(function (entry) {
-    return res.send(entry.content);
-  }).catch((error) => {
-    return res.status(400).json({
-      'success': false,
-      'message': "Unable to retrieve Entry with id: " + req.params.entryId
-    });
-  })
-}
-
-exports.sharedRequired = function (req, res, next) {
-  if (!req.params.entryId) {
-    return res.status(400).json({
-      'success': false,
-      'message': 'Valid entryId required.'
-    });
-  }
-  entryModel.getEntryById(req.params.entryId).then((entry) => {
-    if (entry.isShared) {
-      next();
-    } else {
-      return res.status(401).json({
-        'success': false,
-        'message': 'Unauthorized Access!'
-      });
-    }
-  }).catch((error) => {
-    return res.status(500).json({
-      'success': false,
-      'message': 'Unable to retrieve entry!'
-    });
-  })
-};
-
 /**
  * Get Entry by Id
  * @param {*} req 
@@ -64,6 +29,43 @@ exports.getJournalEntryById = function (req, res) {
         'message': "Unable to retrieve Entry with id: " + req.params.entryId
       });
     })
+  }).catch((error) => {
+    return res.status(400).json({
+      'success': false,
+      'message': "Unable to retrieve Entry with id: " + req.params.entryId
+    });
+  })
+}
+
+/**
+ * Get an entry if it is shared and return it as HTML
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getSharedEntry = function (req, res) {
+  if (!req.params.entryId) {
+    return res.status(400).json({
+      'success': false,
+      'message': 'Valid entryId required.'
+    });
+  }
+
+  entryModel.getEntryById(req.params.entryId).then((entry) => {
+    if (entry.isShared) {
+      let html = '<html><header>';
+      html += '<title>' + entry.name + '</title>';
+      html +='</header><body>';
+      html += '<h1>' + entry.name + '</h1>';
+      html += '<div>' + entry.content + '</div>';
+      html += '</body></html>';
+
+      return res.send(html);
+    } else {
+      return res.status(401).json({
+        'success': false,
+        'message': 'Unauthorized Access!'
+      });
+    }
   }).catch((error) => {
     return res.status(400).json({
       'success': false,

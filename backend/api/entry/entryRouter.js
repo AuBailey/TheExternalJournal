@@ -5,7 +5,7 @@ const express = require('express'),
 
 router.get('/:entryId(\\d+)', authController.loginRequired, entryController.getJournalEntryById);
 
-router.get('/shared/:entryId(\\d+)', entryController.sharedRequired, entryController.getSharedEntry);
+router.get('/shared/:entryId(\\d+)', entryController.getSharedEntry);
 
 router.get('/all/:journalId(\\d+)', authController.loginRequired, entryController.getJournalEntries);
 
