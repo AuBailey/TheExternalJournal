@@ -8,6 +8,12 @@ Only gets the Entry if belongs to logged in User
 
 ### Get `/api/entry/:entryId`
 
+## Get Shared Entry
+
+Returns the Entry as Html if it is shared
+
+### Get `/api/entry/shared/:entryId`
+
 ## Get Entries in a user's journal
 
 Gets all the Entries in specified Journal belonging to logged in User
@@ -33,6 +39,16 @@ entryLong | Longitude where Entry was created |
 ## Update Entry
 
 Updates a Journal Entry if it belongs to the logged in user
+###Body
+Key | Description | Required
+entryId | Id for the updated entry | *
+entryName | New name for the entry | 
+entryContent | additional text for an entry | 
+isShared | boolean about whether the entry is shared | 
+entryLat | Lattitude where Entry was edited |
+entryLong | Longitude where Entry was edited |
+
+*Request requires an entryId and atleast one other field(lat and long are completely optional)
 
 ### PUT `/api/entry`
 
