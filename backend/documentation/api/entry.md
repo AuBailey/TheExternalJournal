@@ -34,13 +34,15 @@ entryLong | Longitude where Entry was created |
 
 Updates a Journal Entry if it belongs to the logged in user
 ###Body
-Key | Description | Required*
-entryId | Id for the updated entry |
-entryname | New name for the entry | 
+Key | Description | Required
+entryId | Id for the updated entry | *
+entryName | New name for the entry | 
 entryContent | additional text for an entry | 
 isShared | boolean about whether the entry is shared | 
+entryLat | Lattitude where Entry was edited |
+entryLong | Longitude where Entry was edited |
 
-*Request requires an entryId and atleast one other field
+*Request requires an entryId and atleast one other field(lat and long are completely optional)
 
 ### PUT `/api/entry`
 

@@ -150,7 +150,7 @@ exports.createEntry = function (req, res) {
 /**
  * Update an Entry
  * This update could be anything from additional text/images being added to an entry, whether the entry has been shared, or a name change
- * for an entry. The entryId and atleast one other field are required for this request to succeed.
+ * for an entry. The entryId and atleast one other field are required for this request to succeed.(entryLat and entryLong are completely optional)
  * @param {*} req 
  * @param {*} res 
  */
