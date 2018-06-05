@@ -116,7 +116,7 @@ export class EntriesPage {
   /**
    * Navigate to the Entries Page
    */
-  openJournal(entry: Entry) {
+  openEntry(entry: Entry) {
     this.navCtrl.push('EntriesPage', {
       entry: entry
     });
