@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Camera } from '@ionic-native/camera';
+import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { NgxEditorModule } from 'ngx-editor';
@@ -33,7 +33,7 @@ import { MyApp } from './app.component';
     User,
     Journals,
     Entries,
-    Camera,
+    Geolocation,
     SplashScreen,
     StatusBar,
     Settings,
