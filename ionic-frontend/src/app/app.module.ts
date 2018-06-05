@@ -1,9 +1,12 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Camera } from '@ionic-native/camera';
+import { Geolocation } from '@ionic-native/geolocation';
+import { SocialSharing } from '@ionic-native/social-sharing';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { NgxEditorModule } from 'ngx-editor';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { IonicStorageModule } from '@ionic/storage';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
@@ -17,6 +20,8 @@ import { MyApp } from './app.component';
   imports: [
     BrowserModule,
     HttpClientModule,
+    NgxEditorModule,
+    TooltipModule.forRoot(),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
   ],
@@ -29,7 +34,8 @@ import { MyApp } from './app.component';
     User,
     Journals,
     Entries,
-    Camera,
+    Geolocation,
+    SocialSharing,
     SplashScreen,
     StatusBar,
     Settings,
