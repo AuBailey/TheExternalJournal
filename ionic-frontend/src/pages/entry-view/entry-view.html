@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{entry.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="editEntry()">
+        <ion-icon name="edit"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-item [innerHtml]="entry.content"></ion-item>
+</ion-content>

@@ -95,7 +95,7 @@ export class EntriesPage {
    * Navigate to the Entries Page
    */
   openEntry(entry: Entry) {
-    this.navCtrl.push('EntriesPage', {
+    this.navCtrl.push('EntryViewPage', {
       entry: entry
     });
   }
