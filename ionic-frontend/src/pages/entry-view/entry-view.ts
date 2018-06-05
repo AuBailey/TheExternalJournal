@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController, AlertController, ToastController, NavParams } from 'ionic-angular';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { IonicPage, ModalController, NavController, ToastController, NavParams } from 'ionic-angular';
 
 import { Entry } from '../../models/entry';
+
+declare var google;
 
 @IonicPage()
 @Component({
@@ -9,11 +11,18 @@ import { Entry } from '../../models/entry';
     templateUrl: 'entry-view.html'
 })
 export class EntryViewPage {
+    displayMap: boolean;
+    @ViewChild('map') mapElement: ElementRef;
+    map: any;
     entry: Entry;
 
-    constructor(public navCtrl: NavController, public params: NavParams, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    constructor(public navCtrl: NavController,
+        public params: NavParams,
+        public modalCtrl: ModalController,
+        private toastCtrl: ToastController) {
         if (params.get('entry')) {
             this.entry = params.get('entry')
+            this.displayMap = !!this.entry.lat
         } else {
             let message = "Error reading entry";
             let toast = this.toastCtrl.create({
@@ -24,6 +33,30 @@ export class EntryViewPage {
             toast.present();
 
             navCtrl.pop();
+        }
+    }
+
+    ionViewDidLoad() {
+        this._loadMap();
+    }
+
+    _loadMap() {
+        if (this.displayMap) {
+            let latLng = new google.maps.LatLng(this.entry.lat, this.entry.lng);
+
+            let mapOptions = {
+                center: latLng,
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+            let marker = new google.maps.Marker({
+                map: this.map,
+                animation: google.maps.Animation.DROP,
+                position: latLng
+            });
+            marker.setMap(this.map);
         }
     }
 
