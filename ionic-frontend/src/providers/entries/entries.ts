@@ -51,7 +51,8 @@ export class Entries {
       'entryName': entry.name,
       'entryContent': entry.content,
       'entryLat': entry.lat,
-      'entryLong': entry.lng
+      'entryLong': entry.lng,
+      'isShared': entry.isShared
     }
     return this.api.put('/entry', body, httpOptions);
   }
