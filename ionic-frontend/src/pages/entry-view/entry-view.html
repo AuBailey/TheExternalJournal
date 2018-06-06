@@ -1,8 +1,5 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
     <ion-title>{{entry.name}}</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="shareEntry()">
@@ -25,7 +22,7 @@
   </ion-card>
 
   <ion-card>
-    <ion-card-content [innerHTML]="entry.content"></ion-card-content>
+    <ion-card-content class="entryContent" [innerHTML]="entry.content"></ion-card-content>
   </ion-card>
   
 </ion-content>

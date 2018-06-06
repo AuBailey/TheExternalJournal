@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, ModalController, NavController, ToastController, NavParams } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, Navbar, ToastController, NavParams } from 'ionic-angular';
 import { SocialSharing } from '@ionic-native/social-sharing'
 
 import { Entry } from '../../models/entry';
@@ -13,10 +13,13 @@ declare var google;
     templateUrl: 'entry-view.html'
 })
 export class EntryViewPage {
-    displayMap: boolean;
+    @ViewChild(Navbar) navBar: Navbar;
     @ViewChild('map') mapElement: ElementRef;
-    map: any;
+
+    callback: any;
+    displayMap: boolean;
     entry: Entry;
+    map: any;
 
     constructor(public navCtrl: NavController,
         public params: NavParams,
@@ -26,6 +29,7 @@ export class EntryViewPage {
         private toastCtrl: ToastController) {
         if (params.get('entry')) {
             this.entry = params.get('entry')
+            this.callback = params.get('callback');
             this.displayMap = !!(this.entry.lat && this.entry.lng);
         } else {
             let message = "Error reading entry";
@@ -39,9 +43,11 @@ export class EntryViewPage {
             navCtrl.pop();
         }
     }
-
     ionViewDidLoad() {
         this._loadMap();
+        this.navBar.backButtonClick = (e:UIEvent)=>{
+            this.callback(this.entry).then(() => { this.navCtrl.pop() });
+        }
     }
 
     _loadMap() {
@@ -66,12 +72,12 @@ export class EntryViewPage {
 
     editEntry() {
         let entryCopy = Object.assign({}, this.entry);
-        let addModal = this.modalCtrl.create('EntryCreatePage', {'entry': entryCopy});
+        let addModal = this.modalCtrl.create('EntryCreatePage', { 'entry': entryCopy });
         addModal.onDidDismiss(entryCopy => {
             if (entryCopy) {
-              this.entry = entryCopy;
+                this.entry = entryCopy;
             }
-          })
+        })
         addModal.present();
     }
 

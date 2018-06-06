@@ -157,7 +157,7 @@ exports.createEntry = function (req, res) {
  * @param {*} res 
  */
 exports.updateEntry = function (req, res) {
-  if (!req.body.entryId ||!(req.body.entryName || req.body.entryContent || req.body.isShared)) {
+  if (!req.body.entryId ||!(req.body.entryName || req.body.entryContent || (req.body.isShared == 1 || req.body.isShared == 0))) {
     return res.status(400).json({
       'success': false,
       'message': 'Valid entryId and at least one of the following are required: entryName, entryContent, isShared.'
@@ -176,7 +176,7 @@ exports.updateEntry = function (req, res) {
       columns.push('content');
       data.push(req.body.entryContent);
     }
-    if (req.body.isShared) {
+    if (req.body.isShared != undefined) {
       columns.push('isShared');
       data.push(req.body.isShared);
     }
