@@ -10,7 +10,8 @@ function getConnection() {
     host: process.env.mysqlHost,
     user: process.env.mysqlUser,
     password: process.env.mysqlPassword,
-    database: process.env.mysqlDatabase
+    database: process.env.mysqlDatabase,
+    connectTimeout: 15000
   });
 
   connection.connect(function (error) {
