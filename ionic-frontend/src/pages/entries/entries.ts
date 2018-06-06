@@ -13,6 +13,7 @@ export class EntriesPage {
   journalId: number;
   isLoading: boolean;
   entries$: Entry[];
+  private currentEntry: Entry;
 
   constructor(public navCtrl: NavController, public params: NavParams, public entries: Entries, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
     if (params.get('journalId')) {
@@ -20,7 +21,7 @@ export class EntriesPage {
       this.journalId = params.get('journalId');
       this.entries.getAll(this.journalId).subscribe(res => {
         this.isLoading = false;
-        this.entries$ = res['data']['entries']; 
+        this.entries$ = res['data']['entries'];
       }, (err) => {
         this.isLoading = false;
 
@@ -33,9 +34,8 @@ export class EntriesPage {
         toast.present();
       });
     } else {
-      this.navCtrl.push('JournalsPage');
+      this.navCtrl.pop();
     }
-    
   }
 
   /**
@@ -43,7 +43,7 @@ export class EntriesPage {
    * modal and then adds the new entry to our data source if the user created one.
    */
   addEntry() {
-    let addModal = this.modalCtrl.create('EntryCreatePage', {'journalId': this.journalId});
+    let addModal = this.modalCtrl.create('EntryCreatePage', { 'journalId': this.journalId });
     addModal.onDidDismiss(entry => {
       if (entry) {
         this.entries$.push(entry);
@@ -54,7 +54,7 @@ export class EntriesPage {
 
   editEntry(entry: Entry, slidingItem: ItemSliding) {
     let entryCopy = Object.assign({}, entry);
-    let addModal = this.modalCtrl.create('EntryCreatePage', {'entry': entryCopy});
+    let addModal = this.modalCtrl.create('EntryCreatePage', { 'entry': entryCopy });
     addModal.onDidDismiss(entryCopy => {
       if (entryCopy) {
         this.entries$.splice(this.entries$.indexOf(entry), 1, entryCopy);
@@ -95,8 +95,18 @@ export class EntriesPage {
    * Navigate to the Entries Page
    */
   openEntry(entry: Entry) {
+    this.currentEntry = entry;
     this.navCtrl.push('EntryViewPage', {
-      entry: entry
+      entry: entry,
+      callback: this.getData
     });
   }
+
+  getData = entry => {
+    return new Promise((resolve, reject) => {
+      this.entries$.splice(this.entries$.indexOf(this.currentEntry), 1, entry);
+      this.currentEntry = null;
+      resolve();
+    });
+  };
 }
