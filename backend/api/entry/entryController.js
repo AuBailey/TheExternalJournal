@@ -49,28 +49,34 @@ exports.getSharedEntry = function (req, res) {
       'message': 'Valid entryId required.'
     });
   }
+  
+  let html = '<html><header>';
+  html += '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">'
+  html += '<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css"  media="screen,projection"/>'
+  html += '<meta name="viewport" content="width=device-width, initial-scale=1.0"/>'
+  html += '<style>img {width: 100%;}</style>'
+
+  let materializeJs = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>'
+
+  let unautorizedAccessHtml = html += '<title>Unauthorized Access</title>';
+  unautorizedAccessHtml +='</header><body class="container">';
+  unautorizedAccessHtml += '<h1>Unauthorized Access</h1>';
+  unautorizedAccessHtml += materializeJs + '</body></html>';
 
   entryModel.getEntryById(req.params.entryId).then((entry) => {
     if (entry.isShared) {
-      let html = '<html><header>';
       html += '<title>' + entry.name + '</title>';
-      html +='</header><body>';
+      html +='</header><body class="container">';
       html += '<h1>' + entry.name + '</h1>';
       html += '<div>' + entry.content + '</div>';
-      html += '</body></html>';
+      html += materializeJs + '</body></html>';
 
       return res.send(html);
     } else {
-      return res.status(401).json({
-        'success': false,
-        'message': 'Unauthorized Access!'
-      });
+      return res.send(unautorizedAccessHtml);
     }
   }).catch((error) => {
-    return res.status(400).json({
-      'success': false,
-      'message': "Unable to retrieve Entry with id: " + req.params.entryId
-    });
+    return res.send(unautorizedAccessHtml);
   })
 }
 
