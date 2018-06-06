@@ -46,7 +46,8 @@ export class EntriesPage {
     let addModal = this.modalCtrl.create('EntryCreatePage', { 'journalId': this.journalId });
     addModal.onDidDismiss(entry => {
       if (entry) {
-        this.entries$.push(entry);
+        entry.date = Date.now();
+        this.entries$.unshift(entry);
       }
     })
     addModal.present();

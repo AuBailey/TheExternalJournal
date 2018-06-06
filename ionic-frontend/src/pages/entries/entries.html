@@ -19,7 +19,7 @@
   </div>
   
   <ion-list>
-    <ion-item-sliding #slidingItem *ngFor="let entry of entries$">
+    <ion-item-sliding #slidingItem *ngFor="let entry of entries$ | reverseOrder">
       <button ion-item (click)="openEntry(entry)">
         <ion-spinner item-end circle *ngIf="entry.isBeingModified"></ion-spinner>
         <h2>{{entry.name}}</h2>
