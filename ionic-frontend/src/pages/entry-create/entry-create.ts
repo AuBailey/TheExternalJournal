@@ -30,6 +30,7 @@ export class EntryCreatePage {
   }
 
   isReadyToSave: boolean;
+  saving: boolean;
   journalId: number;
   title: string;
   entry: Entry;
@@ -86,7 +87,8 @@ export class EntryCreatePage {
    * back to the presenter.
    */
   done() {
-    if (this.form.valid) { 
+    if (this.form.valid) {
+      this.saving = true;
       if (!this.entry.id){
         if (!!this.user._user.useLocation) {
           this.geolocation.getCurrentPosition().then((resp) => {
@@ -121,6 +123,7 @@ export class EntryCreatePage {
     this.entries.add(this.journalId, this.entry).subscribe(req => {
       this.entry.id = req['data']['entryId'];
       this.viewCtrl.dismiss(this.entry);
+      this.saving = false;
     }, err => {
       let message = (err.error.message) ? err.error.message : "An error occured.";
       let toast = this.toastCtrl.create({
@@ -129,12 +132,14 @@ export class EntryCreatePage {
         position: 'top'
       });
       toast.present();
+      this.saving = false
     });
   }
 
   _entryEdit() {
     this.entries.edit(this.entry).subscribe(req => {
       this.viewCtrl.dismiss(this.entry);
+      this.saving = false;
     }, err => {
       let message = (err.error.message) ? err.error.message : "An error occured.";
       let toast = this.toastCtrl.create({
@@ -143,6 +148,7 @@ export class EntryCreatePage {
         position: 'top'
       });
       toast.present();
+      this.saving = false;
     });
   }
 
