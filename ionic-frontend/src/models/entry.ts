@@ -4,6 +4,7 @@ export class Entry {
   content: string;
   lat: number;
   lng: number;
+  date: Date;
   isShared: number;
   isBeingModified: boolean;
 

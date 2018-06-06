@@ -23,6 +23,7 @@
       <button ion-item (click)="openEntry(entry)">
         <ion-spinner item-end circle *ngIf="entry.isBeingModified"></ion-spinner>
         <h2>{{entry.name}}</h2>
+        <p>Created: {{entry.date | date}}</p>
       </button>
 
       <ion-item-options>
