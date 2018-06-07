@@ -17,9 +17,11 @@
   <div padding *ngIf="isLoading">
       <ion-spinner circle></ion-spinner>  
   </div>
+
+  <div class="centered" *ngIf="!isLoading && journals.length==0">No Journals</div>
   
-  <ion-list>
-    <ion-item-sliding #slidingItem *ngFor="let journal of journals$">
+  <ion-list *ngIf="!isLoading">
+    <ion-item-sliding #slidingItem *ngFor="let journal of journals">
       <button ion-item (click)="openJournal(journal)">
         <ion-spinner item-end circle *ngIf="journal.isBeingModified"></ion-spinner>
         <h2>{{journal.name}}</h2>

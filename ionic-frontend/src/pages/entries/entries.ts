@@ -12,16 +12,16 @@ import { Entries } from '../../providers';
 export class EntriesPage {
   journalId: number;
   isLoading: boolean;
-  entries$: Entry[];
+  entries: Entry[];
   private currentEntry: Entry;
 
-  constructor(public navCtrl: NavController, public params: NavParams, public entries: Entries, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public params: NavParams, public entryProvider: Entries, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
     if (params.get('journalId')) {
       this.isLoading = true;
       this.journalId = params.get('journalId');
-      this.entries.getAll(this.journalId).subscribe(res => {
+      this.entryProvider.getAll(this.journalId).subscribe(res => {
         this.isLoading = false;
-        this.entries$ = res['data']['entries'];
+        this.entries = res['data']['entries'];
       }, (err) => {
         this.isLoading = false;
 
@@ -47,7 +47,7 @@ export class EntriesPage {
     addModal.onDidDismiss(entry => {
       if (entry) {
         entry.date = Date.now();
-        this.entries$.unshift(entry);
+        this.entries.unshift(entry);
       }
     })
     addModal.present();
@@ -58,7 +58,7 @@ export class EntriesPage {
     let addModal = this.modalCtrl.create('EntryCreatePage', { 'entry': entryCopy });
     addModal.onDidDismiss(entryCopy => {
       if (entryCopy) {
-        this.entries$.splice(this.entries$.indexOf(entry), 1, entryCopy);
+        this.entries.splice(this.entries.indexOf(entry), 1, entryCopy);
       }
       slidingItem.close();
     })
@@ -80,9 +80,9 @@ export class EntriesPage {
         {
           text: 'Yes',
           handler: () => {
-            this.entries.delete(entry).subscribe(resp => {
+            this.entryProvider.delete(entry).subscribe(resp => {
               if (resp['success']) {
-                this.entries$.splice(this.entries$.indexOf(entry), 1);
+                this.entries.splice(this.entries.indexOf(entry), 1);
               }
             });
           }
@@ -105,7 +105,7 @@ export class EntriesPage {
 
   getData = entry => {
     return new Promise((resolve, reject) => {
-      this.entries$.splice(this.entries$.indexOf(this.currentEntry), 1, entry);
+      this.entries.splice(this.entries.indexOf(this.currentEntry), 1, entry);
       this.currentEntry = null;
       resolve();
     });

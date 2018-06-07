@@ -11,13 +11,13 @@ import { Journals } from '../../providers';
 })
 export class JournalsPage {
   isLoading: boolean;
-  journals$: Journal[];
+  journals: Journal[];
 
-  constructor(public navCtrl: NavController, public journals: Journals, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public journalProvider: Journals, public modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
     this.isLoading = true;
-    this.journals.getAll().subscribe(res => {
+    this.journalProvider.getAll().subscribe(res => {
       this.isLoading = false;
-      this.journals$ = res['data']['journals'];
+      this.journals = res['data']['journals'];
     }, (err) => {
       this.isLoading = false;
 
@@ -39,9 +39,9 @@ export class JournalsPage {
     let addModal = this.modalCtrl.create('JournalCreatePage');
     addModal.onDidDismiss(journal => {
       if (journal) {
-        this.journals.add(journal).subscribe(resp => {
+        this.journalProvider.add(journal).subscribe(resp => {
           journal.id = resp['data']['journalId'];
-          this.journals$.push(journal);
+          this.journals.push(journal);
         }, (err) => {
           let message = (err.error.message) ? err.error.message : "An error occured.";
           let toast = this.toastCtrl.create({
@@ -62,8 +62,8 @@ export class JournalsPage {
     addModal.onDidDismiss(journalCopy => {
       if (journalCopy && (journalCopy.name !== journal.name)) {
         journal.isBeingModified = true;
-        this.journals.edit(journalCopy).subscribe(resp => {
-          this.journals$.splice(this.journals$.indexOf(journal), 1, journalCopy);
+        this.journalProvider.edit(journalCopy).subscribe(resp => {
+          this.journals.splice(this.journals.indexOf(journal), 1, journalCopy);
           journal.isBeingModified = false;
         }, (err) => {
           let message = (err.error.message) ? err.error.message : "An error occured.";
@@ -96,8 +96,8 @@ export class JournalsPage {
         {
           text: 'Yes',
           handler: () => {
-            this.journals.delete(journal).subscribe(resp => {
-              this.journals$.splice(this.journals$.indexOf(journal), 1);
+            this.journalProvider.delete(journal).subscribe(resp => {
+              this.journals.splice(this.journals.indexOf(journal), 1);
             }, err => {
               let message = (err.error.message) ? err.error.message : "An error occured.";
               let toast = this.toastCtrl.create({
